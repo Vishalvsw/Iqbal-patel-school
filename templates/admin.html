@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="theme-color" content="#0a2b4e">
+    <title>Admin Dashboard | IQBAL PATEL SCHOOL</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2b4e;
+            --primary-light: #1c4f8a;
+            --accent: #007bff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --bg: #f0f4f8;
+            --card-bg: #fff;
+            --text: #2c3e50;
+            --muted: #6c757d;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(10,43,78,0.08);
+            --phonepe: #5f259f;
+            --phonepe-light: #7b3fb5;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            font-family: 'Segoe UI', 'Noto Sans Kannada', system-ui, sans-serif;
+            color: var(--text);
+            font-size: 15px;
+            overflow-x: hidden;
+        }
+
+        /* HEADER */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #fff;
+            padding: clamp(16px, 4vw, 28px) 12px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+        }
+        .admin-header h1 {
+            font-size: clamp(1.1rem, 4vw, 1.8rem);
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+        .admin-header .exam-info {
+            font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+        .admin-header .exam-info strong { color: var(--warning); }
+
+        /* MAIN CARD */
+        .main-wrapper {
+            max-width: 1200px;
+            margin: -18px auto 24px;
+            padding: 0 12px;
+            position: relative;
+            z-index: 2;
+        }
+        .main-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px rgba(10,43,78,0.15);
+            padding: clamp(16px, 4vw, 32px);
+            border-top: 5px solid var(--accent);
+        }
+        .main-card h2 {
+            font-size: clamp(1.1rem, 3.5vw, 1.5rem);
+            font-weight: 800;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .main-card h2 i { color: var(--accent); margin-right: 8px; }
+
+        /* SEARCH BAR */
+        .search-bar {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+        .search-bar .form-control {
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+            height: auto;
+            padding: 10px 14px;
+        }
+        .search-bar .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.12);
+        }
+        .btn-search {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+            transition: background 0.2s, transform 0.1s;
+            width: 100%;
+        }
+        .btn-search:hover { background: #0056b3; color: #fff; transform: translateY(-1px); }
+
+        /* TABLE */
+        .table-responsive {
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table {
+            margin-bottom: 0;
+            font-size: clamp(0.78rem, 2.2vw, 0.9rem);
+            min-width: 700px;
+        }
+        .table thead th {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary-light);
+            font-weight: 600;
+            font-size: clamp(0.72rem, 2vw, 0.82rem);
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 12px 8px;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        .table tbody td {
+            vertical-align: middle;
+            padding: 10px 8px;
+            border-color: var(--border);
+        }
+        .table tbody tr:hover { background: #f8fbff; }
+        .badge {
+            font-size: clamp(0.68rem, 1.9vw, 0.78rem);
+            padding: 5px 10px;
+            font-weight: 600;
+            border-radius: 50px;
+        }
+        .btn-sm {
+            font-size: clamp(0.68rem, 1.9vw, 0.78rem);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 2px 0;
+            white-space: nowrap;
+        }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 4px; }
+
+        /* PAGINATION */
+        .pagination { flex-wrap: wrap; gap: 4px; }
+        .pagination .page-link {
+            border-radius: 8px !important;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            padding: 6px 12px;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            margin: 0 1px;
+        }
+        .pagination .page-item.active .page-link {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* DOWNLOAD BUTTON */
+        .btn-download {
+            background: var(--success);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-weight: 600;
+            font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .btn-download:hover { background: #1e7e34; color: #fff; transform: translateY(-1px); }
+
+        /* FLASH */
+        .alert {
+            border-radius: 10px;
+            font-size: clamp(0.82rem, 2.3vw, 0.92rem);
+            border: none;
+            border-left: 5px solid;
+        }
+
+        /* QR ANIMATION */
+        @keyframes qrPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0.4); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(95,37,159,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0); }
+        }
+        .qr-animated { animation: qrPulse 2s infinite; border-radius: 10px; }
+        .intent-btn {
+            display: inline-block; padding: 10px 24px;
+            background: linear-gradient(135deg, var(--phonepe), var(--phonepe-light));
+            color: #fff; font-weight: 700; border-radius: 8px; text-decoration: none;
+            box-shadow: 0 4px 14px rgba(95,37,159,0.35);
+            transition: transform 0.15s;
+        }
+        .intent-btn:hover { color: #fff; text-decoration: none; transform: translateY(-2px); }
+
+        /* CONFIG STATUS BADGE */
+        .config-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .config-status.ok { background: #d4edda; color: #155724; }
+        .config-status.missing { background: #f8d7da; color: #721c24; }
+
+        /* RESPONSIVE */
+        @media (max-width: 767.98px) {
+            .main-wrapper { margin-top: -10px; }
+            .main-card { padding: 16px 10px; border-radius: 10px; }
+            .search-bar .form-group { margin-bottom: 8px; }
+            .table { min-width: 650px; }
+            .btn-group { flex-direction: column; }
+            .btn-sm { width: 100%; margin-bottom: 2px; }
+        }
+        @media (max-width: 575.98px) {
+            body { font-size: 14px; }
+            .table { min-width: 600px; }
+            .admin-header h1 { font-size: 1.05rem; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background: #b0c4de; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="admin-header">
+        <h1><i class="fas fa-shield-alt"></i> Admin Dashboard</h1>
+        <div class="exam-info">
+            <p class="mb-1"><strong>FREE Hostel Entrance Exam 2027-28</strong></p>
+            <p class="mb-1">A/c &amp; Non-A/c Hostel for Boys and Girls</p>
+            <p class="mb-1"><strong>Phase 1:</strong> 07 Feb 2027 (Sun) &nbsp;|&nbsp; <strong>Phase 2:</strong> 06 Apr 2027 (Tue)</p>
+            <p class="mb-1">Batch: <strong>11:30 AM – 01:30 PM</strong> &amp; <strong>02:30 PM – 04:30 PM</strong></p>
+            <p class="mb-0"><em>Organized for the development of economically and socially backward students.</em></p>
+        </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="main-wrapper">
+        <div class="main-card">
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <h2><i class="fas fa-users"></i> Student Registrations</h2>
+
+            <!-- Search -->
+            <div class="search-bar">
+                <form method="GET" action="{{ url_for('admin_dashboard') }}">
+                    <div class="form-row align-items-end">
+                        <div class="form-group col-12 col-md-5 mb-2 mb-md-0">
+                            <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">Search</label>
+                            <input type="text" name="search" class="form-control" placeholder="Name or ID..." value="{{ request.args.get('search', '') }}">
+                        </div>
+                        <div class="form-group col-12 col-md-4 mb-2 mb-md-0">
+                            <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">Class</label>
+                            <select name="class" class="form-control">
+                                <option value="">All Classes</option>
+                                <option value="10th" {% if request.args.get('class') == '10th' %}selected{% endif %}>10th</option>
+                                <option value="6th" {% if request.args.get('class') == '6th' %}selected{% endif %}>6th</option>
+                                <option value="1st PUC Science" {% if request.args.get('class') == '1st PUC Science' %}selected{% endif %}>1st PUC Science</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-12 col-md-3 mb-0">
+                            <button type="submit" class="btn-search"><i class="fas fa-search mr-1"></i> Search</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Hall Ticket</th>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>UTR</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if students %}
+                            {% for student in students %}
+                                <tr>
+                                    <td>{{ student.id }}</td>
+                                    <td><span class="font-weight-bold">{{ student.hall_ticket }}</span></td>
+                                    <td>{{ student.name }}</td>
+                                    <td>{{ student.class }}</td>
+                                    <td style="word-break:break-all;">{{ student.payment_utr }}</td>
+                                    <td>
+                                        {% if student.verified %}
+                                            <span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i>Verified</span>
+                                        {% else %}
+                                            <span class="badge badge-warning text-dark"><i class="fas fa-clock mr-1"></i>Pending</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group">
+                                            {% if not student.verified %}
+                                                <form action="{{ url_for('verify_student', student_id=student.id) }}" method="POST" style="display:inline;">
+                                                    <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Verify this student?')">
+                                                        <i class="fas fa-check mr-1"></i>Verify
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                            {% if student.verified %}
+                                                <form action="{{ url_for('generate_hall_ticket', student_id=student.id) }}" method="POST" style="display:inline;">
+                                                    <button type="submit" class="btn btn-success btn-sm">
+                                                        <i class="fas fa-ticket-alt mr-1"></i>Hall Ticket
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    <i class="fas fa-inbox fa-2x d-block mb-2" style="opacity:0.4;"></i>
+                                    No students found
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            {% if pagination %}
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                        {% if pagination.has_prev %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin_dashboard', page=pagination.prev_num, search=request.args.get('search',''), class=request.args.get('class','')) }}"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                        {% endif %}
+                        {% for page_num in pagination.iter_pages() %}
+                            {% if page_num %}
+                                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
+                                    <a class="page-link" href="{{ url_for('admin_dashboard', page=page_num, search=request.args.get('search',''), class=request.args.get('class','')) }}">{{ page_num }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item disabled"><a class="page-link">…</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if pagination.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="{{ url_for('admin_dashboard', page=pagination.next_num, search=request.args.get('search',''), class=request.args.get('class','')) }}"><i class="fas fa-chevron-right"></i></a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+
+            <!-- Download CSV -->
+            <div class="text-center mt-4">
+                <form action="/download_csv" method="get">
+                    <button type="submit" class="btn-download">
+                        <i class="fas fa-download mr-1"></i> Download CSV
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ========== PhonePe Payment Settings ========== -->
+        <div class="main-card mt-4">
+            <h2>
+                <i class="fas fa-cog"></i> PhonePe Payment Settings
+                <span id="configStatusBadge" class="config-status missing">Not Configured</span>
+            </h2>
+
+            <p class="text-center text-muted" style="font-size:0.85rem;margin-bottom:18px;">
+                Enter your PhonePe Payment Gateway credentials. All four fields are required.
+            </p>
+
+            <div class="search-bar">
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">
+                            Client ID <span style="color:#dc3545;">*</span>
+                        </label>
+                        <input type="text" id="phonepeClientId" class="form-control" placeholder="e.g. YOUR_CLIENT_ID">
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">
+                            Client Secret <span style="color:#dc3545;">*</span>
+                        </label>
+                        <input type="password" id="phonepeClientSecret" class="form-control" placeholder="Enter Client Secret">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-4">
+                        <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">
+                            Merchant ID <span style="color:#dc3545;">*</span>
+                        </label>
+                        <input type="text" id="phonepeMerchantId" class="form-control" placeholder="e.g. PGTESTPAYUAT">
+                        <small class="text-muted d-block mt-1" style="font-size:0.72rem;">
+                            Sent as <code>X-MERCHANT-ID</code> header
+                        </small>
+                    </div>
+                    <div class="form-group col-12 col-md-3">
+                        <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">Client Version</label>
+                        <input type="text" id="phonepeClientVersion" class="form-control" placeholder="e.g. 1" value="1">
+                    </div>
+                    <div class="form-group col-12 col-md-3">
+                        <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">Environment</label>
+                        <select id="phonepeEnv" class="form-control">
+                            <option value="sandbox">Sandbox (Test)</option>
+                            <option value="production">Production</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 mb-0">
+                        <button type="button" id="savePhonePeConfig" class="btn-search">
+                            <i class="fas fa-save mr-1"></i> Save Configuration
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <h3 style="font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:12px;">
+                <i class="fas fa-qrcode mr-1"></i> Test Dynamic QR Code
+            </h3>
+            <div class="form-row">
+                <div class="form-group col-12 col-md-4">
+                    <label class="font-weight-bold" style="font-size:0.82rem;color:var(--muted);">Amount (₹)</label>
+                    <input type="number" id="testAmount" class="form-control" value="1" min="1" step="1">
+                </div>
+                <div class="form-group col-12 col-md-4 d-flex align-items-end">
+                    <button type="button" id="generateTestQr" class="btn-search" style="background:var(--success);">
+                        <i class="fas fa-magic mr-1"></i> Generate QR
+                    </button>
+                </div>
+            </div>
+
+            <div id="qrResult" style="display:none;text-align:center;margin-top:20px;">
+                <div style="background:#f8fafc;border:2px dashed var(--phonepe);border-radius:12px;padding:20px;display:inline-block;">
+                    <p style="font-weight:700;color:var(--primary);margin-bottom:8px;">Scan with PhonePe</p>
+                    <img id="qrImage" class="qr-animated" src="" alt="Payment QR" style="max-width:200px;">
+                    <br>
+                    <a id="intentLink" href="#" class="intent-btn" style="margin-top:12px;">
+                        <i class="fab fa-phonepe mr-1"></i> Open PhonePe to Pay
+                    </a>
+                    <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Order: <span id="qrOrderId"></span></p>
+                </div>
+            </div>
+            <div id="qrError" class="alert alert-danger" style="display:none;margin-top:12px;"></div>
+        </div>
+    </main>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.5/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+    // ========== Config Status Badge ==========
+    function updateStatusBadge() {
+        const badge = document.getElementById('configStatusBadge');
+        const clientId = document.getElementById('phonepeClientId').value.trim();
+        const clientSecret = document.getElementById('phonepeClientSecret').value.trim();
+        const merchantId = document.getElementById('phonepeMerchantId').value.trim();
+        if (clientId && clientSecret && merchantId) {
+            badge.className = 'config-status ok';
+            badge.textContent = 'Configured';
+        } else {
+            badge.className = 'config-status missing';
+            badge.textContent = 'Not Configured';
+        }
+    }
+    ['phonepeClientId', 'phonepeClientSecret', 'phonepeMerchantId'].forEach(function(id) {
+        document.getElementById(id).addEventListener('input', updateStatusBadge);
+    });
+
+    // ========== Save Config ==========
+    document.getElementById('savePhonePeConfig').addEventListener('click', function() {
+        const config = {
+            client_id: document.getElementById('phonepeClientId').value.trim(),
+            client_secret: document.getElementById('phonepeClientSecret').value.trim(),
+            merchant_id: document.getElementById('phonepeMerchantId').value.trim(),
+            client_version: document.getElementById('phonepeClientVersion').value.trim(),
+            env: document.getElementById('phonepeEnv').value
+        };
+
+        // Validate
+        if (!config.client_id || !config.client_secret || !config.merchant_id) {
+            alert('Please enter Client ID, Client Secret and Merchant ID');
+            return;
+        }
+
+        const btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Saving...';
+
+        fetch('/admin/save_phonepe_config', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(config)
+        })
+        .then(r => r.json())
+        .then(d => {
+            if (d.success) {
+                alert('✅ Configuration saved successfully!');
+                updateStatusBadge();
+            } else {
+                alert('❌ Error: ' + d.error);
+            }
+        })
+        .catch(e => alert('❌ Network error: ' + e.message))
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save mr-1"></i> Save Configuration';
+        });
+    });
+
+    // ========== Generate Test QR ==========
+    document.getElementById('generateTestQr').addEventListener('click', function() {
+        const btn = this;
+        const qrResult = document.getElementById('qrResult');
+        const qrError = document.getElementById('qrError');
+        const amount = parseFloat(document.getElementById('testAmount').value) || 1;
+
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Generating...';
+        qrError.style.display = 'none';
+        qrResult.style.display = 'none';
+
+        fetch('/admin/generate_payment_qr', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({amount: Math.round(amount * 100)})
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success && data.qrData) {
+                document.getElementById('qrImage').src =
+                    'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(data.qrData);
+                document.getElementById('intentLink').href = data.intentUrl || '#';
+                document.getElementById('qrOrderId').textContent = data.orderId || '-';
+                qrResult.style.display = 'block';
+            } else {
+                qrError.textContent = data.error || 'Failed to generate QR';
+                qrError.style.display = 'block';
+            }
+        })
+        .catch(e => {
+            qrError.textContent = 'Network error: ' + e.message;
+            qrError.style.display = 'block';
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-magic mr-1"></i> Generate QR';
+        });
+    });
+    </script>
+</body>
+</html>

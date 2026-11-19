@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Flask / secrets
+.env
+instance/
+*.db
+phonepe_config.json
+
+# Uploads (student PII — never commit)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db

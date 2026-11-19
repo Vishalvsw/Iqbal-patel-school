@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="theme-color" content="#0a2b4e">
+    <title>Student Registration | IQBAL PATEL SCHOOL</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2b4e;
+            --primary-light: #1c4f8a;
+            --accent: #007bff;
+            --accent-hover: #0056b3;
+            --gold: #ffc107;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --muted: #6c757d;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(10, 43, 78, 0.08);
+            --shadow-lg: 0 10px 40px rgba(10, 43, 78, 0.15);
+            --phonepe: #5f259f;
+            --phonepe-light: #7b3fb5;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--bg);
+            font-family: 'Segoe UI', 'Noto Sans Kannada', system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            font-size: 15px;
+            line-height: 1.6;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* ===== HEADER ===== */
+        .site-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: #fff;
+            padding: 16px 12px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .site-header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+        .header-logo {
+            width: clamp(64px, 12vw, 96px);
+            height: clamp(64px, 12vw, 96px);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid rgba(255,255,255,0.7);
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            margin-bottom: 8px;
+        }
+        .site-header h6 {
+            font-size: clamp(0.7rem, 2vw, 0.92rem);
+            margin: 2px 0;
+            opacity: 0.92;
+            line-height: 1.45;
+            font-weight: 400;
+            padding: 0 8px;
+        }
+        .school-title {
+            font-size: clamp(1rem, 3.2vw, 1.7rem);
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin: 6px 0 2px;
+            color: var(--gold);
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+        .school-subtitle {
+            font-size: clamp(0.78rem, 2.2vw, 1.15rem);
+            font-weight: 600;
+            margin: 0 0 6px;
+            color: #e8f1ff;
+            line-height: 1.3;
+        }
+        .exam-badge {
+            display: inline-block;
+            background: var(--gold);
+            color: var(--primary);
+            font-weight: 700;
+            padding: 6px 18px;
+            border-radius: 50px;
+            font-size: clamp(0.78rem, 2.2vw, 1rem);
+            margin: 10px 0 6px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        .marquee-wrap {
+            background: rgba(0,0,0,0.25);
+            border-radius: 8px;
+            padding: 6px 0;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .marquee-wrap marquee {
+            color: #fff;
+            font-size: clamp(0.78rem, 2vw, 0.95rem);
+        }
+
+        /* ===== FORM CARD ===== */
+        .form-wrapper {
+            max-width: 960px;
+            margin: -20px auto 24px;
+            padding: 0 12px;
+            position: relative;
+            z-index: 2;
+        }
+        .form-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: clamp(16px, 4vw, 40px);
+            border-top: 5px solid var(--accent);
+        }
+        .form-title {
+            text-align: center;
+            font-size: clamp(1.25rem, 4vw, 1.8rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+        .form-title i { color: var(--accent); margin-right: 8px; }
+        .form-subtitle {
+            text-align: center;
+            color: var(--muted);
+            font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+            margin-bottom: 24px;
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: clamp(1rem, 2.8vw, 1.2rem);
+            font-weight: 700;
+            color: var(--primary);
+            margin: 28px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border);
+        }
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 22px;
+            background: var(--accent);
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+        .section-title i { color: var(--accent); font-size: 0.95em; }
+
+        /* ===== FORM CONTROLS ===== */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label {
+            font-weight: 600;
+            font-size: clamp(0.82rem, 2.3vw, 0.92rem);
+            color: var(--text);
+            margin-bottom: 6px;
+            display: block;
+        }
+        .required-star { color: #dc3545; margin-left: 2px; }
+        .form-control {
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            padding: 10px 14px;
+            font-size: clamp(0.85rem, 2.4vw, 0.95rem);
+            height: auto;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: #fafbfc;
+            width: 100%;
+        }
+        .form-control:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.12);
+            background: #fff;
+        }
+        textarea.form-control { min-height: 80px; resize: vertical; }
+        select.form-control { appearance: auto; }
+        .form-control-file { font-size: clamp(0.8rem, 2.2vw, 0.9rem); }
+
+        /* ===== UPLOAD BOXES ===== */
+        .upload-box {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            background: #fafbfc;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .upload-box:hover { border-color: var(--accent); background: #f0f7ff; }
+        .upload-box i { font-size: 1.6rem; color: var(--accent); margin-bottom: 8px; display: block; }
+        .upload-box small { color: var(--muted); font-size: 0.78rem; }
+
+        /* ===== PAYMENT SECTION ===== */
+        .payment-box {
+            text-align: center;
+            margin: 12px 0 20px;
+            padding: 20px 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .payment-box h5 {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+            font-size: clamp(0.95rem, 2.6vw, 1.1rem);
+        }
+        .payment-box p {
+            color: var(--muted);
+            font-size: clamp(0.8rem, 2.2vw, 0.9rem);
+            margin-bottom: 14px;
+        }
+
+        /* PhonePe Pay Button */
+        .btn-phonepe {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--phonepe) 0%, var(--phonepe-light) 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: clamp(0.9rem, 2.6vw, 1rem);
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(95,37,159,0.35);
+            transition: transform 0.15s, box-shadow 0.2s;
+            width: 100%;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+        .btn-phonepe:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(95,37,159,0.5);
+            color: #fff;
+        }
+        .btn-phonepe:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-phonepe i { font-size: 1.1em; }
+
+        /* Dynamic QR Display */
+        .dynamic-qr-area {
+            display: none;
+            margin-top: 18px;
+            padding: 16px;
+            background: #fff;
+            border: 2px dashed var(--phonepe);
+            border-radius: 12px;
+        }
+        .dynamic-qr-area.show { display: block; animation: fadeIn 0.3s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes qrPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0.35); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(95,37,159,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0); }
+        }
+        .qr-animated {
+            animation: qrPulse 2s infinite;
+            border-radius: 10px;
+            max-width: 200px;
+            width: 100%;
+            height: auto;
+        }
+        .intent-link-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--phonepe), var(--phonepe-light));
+            color: #fff;
+            font-weight: 700;
+            border-radius: 8px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(95,37,159,0.35);
+            transition: transform 0.15s;
+        }
+        .intent-link-btn:hover {
+            color: #fff;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+        .order-id-text {
+            margin-top: 10px;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+        .qr-error {
+            display: none;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            border-radius: 8px;
+            color: #721c24;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+        .qr-error.show { display: block; }
+
+        /* Divider */
+        .payment-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 18px 0;
+            color: var(--muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .payment-divider::before,
+        .payment-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            font-size: clamp(0.95rem, 2.8vw, 1.1rem);
+            padding: 14px 20px;
+            border-radius: 10px;
+            width: 100%;
+            letter-spacing: 0.5px;
+            transition: transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 4px 14px rgba(0,123,255,0.3);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0,123,255,0.4);
+            color: #fff;
+        }
+        .btn-submit:active { transform: translateY(0); }
+
+        /* ===== FLASH MESSAGES ===== */
+        .alert-success {
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+            margin-top: 20px;
+            font-size: clamp(0.85rem, 2.3vw, 0.95rem);
+        }
+
+        /* ===== FOOTER ===== */
+        .site-footer {
+            background: var(--primary);
+            color: #dbe6f0;
+            text-align: center;
+            padding: 20px 12px;
+            margin-top: 30px;
+            font-size: clamp(0.78rem, 2.2vw, 0.9rem);
+        }
+        .site-footer a { color: #4fc3f7; text-decoration: none; font-weight: 600; }
+        .site-footer a:hover { text-decoration: underline; }
+
+        /* ===== RESPONSIVE TWEAKS ===== */
+        @media (max-width: 767.98px) {
+            .form-wrapper { margin-top: -10px; }
+            .form-card { padding: 18px 14px; border-radius: 10px; }
+            .site-header { padding: 14px 8px; }
+            .section-title { margin: 22px 0 12px; }
+            .btn-submit { padding: 13px; }
+        }
+        @media (max-width: 575.98px) {
+            body { font-size: 14px; }
+            .form-card { padding: 16px 10px; }
+            .form-row > [class*="col-"] { margin-bottom: 0.35rem; }
+            .btn-phonepe { font-size: 0.9rem; padding: 11px 20px; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #b0c4de; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <img src="static/img/logo.jpg" alt="IQBAL PATEL SCHOOL Logo" class="header-logo">
+        <h6>ಶಿಕ್ಷಣದಲ್ಲಿ ಹಿಂದುಳಿದ ಕಲ್ಯಾಣ ಕರ್ನಾಟಕದ ಅಭಿವೃದ್ಧಿಗಾಗಿ ಆಯೋಜಿಸಿರುವ</h6>
+        <h6>ವಿದ್ಯಾರ್ಥಿಯ ಸರ್ವೋತಮುಖ ಬೆಳವಣಿಗೆಗಾಗಿ ಹಿಂದುಳಿದ ಹಾಗೂ ಬಡ ಕುಟುಂಬದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗಾಗಿ ಉಚಿತ ವಸತಿ ಶಾಲೆಯ ಪ್ರವೇಶ ಅರ್ಜಿ 2027-28</h6>
+        <h2 class="school-title">IQBAL PATEL PRIMARY &amp; HIGH SCHOOL</h2>
+        <h3 class="school-subtitle">Residential &amp; Non Residential SHAIK MOINUDDIN PU COLLEGE</h3>
+        <h6>ಕೊಂಗಲಿ ರಸ್ತೆ, ಹುಲ್ಸೂರ್ - 585 416 ತಾ. ಹುಲ್ಸೂರ್ ಜಿಲ್ಲೆ ಬೀದರ್</h6>
+        <div><span class="exam-badge"><i class="fas fa-graduation-cap"></i> Free Hostel Entrance Exam 2027-28</span></div>
+        <div class="marquee-wrap">
+            <marquee behavior="scroll" direction="left" scrollamount="5">
+                Admissions are open for 2027! | ನಿಮ್ಮ ಭವಿಷ್ಯವನ್ನು ನಿರ್ಧರಿಸಿ ಇಂದು ಪ್ರವೇಶ ಪರೀಕ್ಷೆಗಾಗಿ ನೋಂದಣಿ ಮಾಡಿ! | Parent-teacher meeting scheduled for Jan 10th.
+            </marquee>
+        </div>
+    </header>
+
+    <!-- FORM -->
+    <main class="form-wrapper">
+        <div class="form-card">
+            <h1 class="form-title"><i class="fas fa-user-plus"></i> Student Registration</h1>
+            <p class="form-subtitle">Please fill in all required fields carefully</p>
+
+            <form action="/register" method="POST" enctype="multipart/form-data" novalidate id="registrationForm">
+
+                <!-- STUDENT INFO -->
+                <div class="section-title"><i class="fas fa-user"></i> Student Information</div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="name">Student Name (Capital) <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" required autocomplete="name">
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="father_name">Father's Name (Capital) <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="father_name" name="father_name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="mother_name">Mother's Name (Capital) <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="mother_name" name="mother_name" required>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="dob">Date of Birth <span class="required-star">*</span></label>
+                        <input type="date" class="form-control" id="dob" name="dob" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="gender">Gender <span class="required-star">*</span></label>
+                        <select id="gender" name="gender" class="form-control" required>
+                            <option value="">Select Gender</option>
+                            <option value="Female">Female</option>
+                            <option value="Male">Male</option>
+                            <option value="Transgender">Transgender</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ADDRESS -->
+                <div class="section-title"><i class="fas fa-map-marker-alt"></i> Address Information</div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="village">Village <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="village" name="village" required>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="taluka">Taluka <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="taluka" name="taluka" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="district">District <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="district" name="district" required>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="pin">Pin Code <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="pin" name="pin" required inputmode="numeric">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="residential_address">Residential Address <span class="required-star">*</span></label>
+                        <textarea class="form-control" id="residential_address" name="residential_address" required></textarea>
+                    </div>
+                </div>
+
+                <!-- PREVIOUS SCHOOL -->
+                <div class="section-title"><i class="fas fa-school"></i> Previous School Information</div>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="previous_school">Previous School Name And Address <span class="required-star">*</span></label>
+                        <textarea class="form-control" id="previous_school" name="previous_school" required></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="class">Class <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="class" name="class" required>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="academic_year">Academic Year <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="academic_year" name="academic_year" required>
+                    </div>
+                </div>
+
+                <!-- ADDITIONAL INFO -->
+                <div class="section-title"><i class="fas fa-info-circle"></i> Additional Information</div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="aadhar">Aadhar Number <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="aadhar" name="aadhar" required inputmode="numeric">
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="religion">Religion <span class="required-star">*</span></label>
+                        <select id="religion" name="religion" class="form-control" required>
+                            <option value="">Select religion</option>
+                            <option value="Hindu">Hindu</option>
+                            <option value="Muslim">Muslim</option>
+                            <option value="Christian">Christian</option>
+                            <option value="Sikh">Sikh</option>
+                            <option value="Buddhist">Buddhist</option>
+                            <option value="Jain">Jain</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="caste">Caste <span class="required-star">*</span></label>
+                        <select id="caste" name="caste" class="form-control" required>
+                            <option value="">Select caste</option>
+                            <option value="General">General</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="OBC">OBC</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="nationality">Nationality <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="nationality" name="nationality" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="mother_tongue">Mother Tongue <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="mother_tongue" name="mother_tongue" required>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="medium">Medium <span class="required-star">*</span></label>
+                        <select class="form-control" id="medium" name="medium" required>
+                            <option value="">Select Medium</option>
+                            <option value="Kannada">Kannada</option>
+                            <option value="English">English</option>
+                            <option value="Urdu">Urdu</option>
+                            <option value="Others">Others</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CONTACT -->
+                <div class="section-title"><i class="fas fa-phone-alt"></i> Contact Information</div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="phone1">Phone Number 1 <span class="required-star">*</span></label>
+                        <input type="tel" class="form-control" id="phone1" name="phone1" pattern="\d{10}" title="Please enter a valid 10-digit phone number" required inputmode="numeric" maxlength="10">
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="phone2">Phone Number 2</label>
+                        <input type="tel" class="form-control" id="phone2" name="phone2" pattern="\d{10}" title="Please enter a valid 10-digit phone number" inputmode="numeric" maxlength="10">
+                    </div>
+                </div>
+
+                <!-- ADMISSION DETAILS -->
+                <div class="section-title"><i class="fas fa-id-card"></i> Admission Details</div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="admission_for">Admission For <span class="required-star">*</span></label>
+                        <select class="form-control" id="admission_for" name="admission_for" required>
+                            <option value="">Select admission For</option>
+                            <option value="6">6th Grade</option>
+                            <option value="9">9th Grade</option>
+                            <option value="1st_PUC_Science">1st PUC Science</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="admission_type">Admission Type <span class="required-star">*</span></label>
+                        <select class="form-control" id="admission_type" name="admission_type" required>
+                            <option value="">Select admission Type</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Non_Residential">Non Residential</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-12">
+                        <label for="exam_center">Choose Your Near by Entrance Exam Center <span class="required-star">*</span></label>
+                        <select class="form-control" id="exam_center" name="exam_center" required>
+                            <option value="">Select Your near by Exam Center</option>
+                            <option value="IQBAL PATEL PRIMARY & HIGH SCHOOL KONGALI ROAD HULSOOR Dist. Bidar">IQBAL PATEL PRIMARY &amp; HIGH SCHOOL KONGALI ROAD HULSOOR Dist. Bidar</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- UPLOADS -->
+                <div class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload Documents</div>
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="photo">Passport Photo (Max size: 120KB) <span class="required-star">*</span></label>
+                        <div class="upload-box">
+                            <i class="fas fa-user-circle"></i>
+                            <input type="file" class="form-control-file" id="photo" name="photo" accept="image/*" required>
+                            <small class="d-block mt-1">PNG, JPG, JPEG only</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-12 col-md-6">
+                        <label for="signature">Upload Signature (Max size: 120KB) <span class="required-star">*</span></label>
+                        <div class="upload-box">
+                            <i class="fas fa-signature"></i>
+                            <input type="file" class="form-control-file" id="signature" name="signature" accept="image/*" required>
+                            <small class="d-block mt-1">PNG, JPG, JPEG only</small>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function validateFile(inputId, label) {
+                        var input = document.getElementById(inputId);
+                        input.addEventListener('change', function () {
+                            if (this.files && this.files[0]) {
+                                if (this.files[0].size > 120 * 1024) {
+                                    alert(label + ' size must be less than 120KB');
+                                    this.value = '';
+                                }
+                            }
+                        });
+                    }
+                    validateFile('photo', 'Photo');
+                    validateFile('signature', 'Signature');
+                </script>
+
+                <!-- ===== PAYMENT SECTION (UPDATED) ===== -->
+                <div class="section-title"><i class="fas fa-rupee-sign"></i> Payment Information</div>
+
+                <div class="payment-box">
+                    <h5><i class="fas fa-mobile-alt mr-1"></i> Pay with PhonePe</h5>
+                    <p>Click below to generate a secure QR code and pay via PhonePe</p>
+
+                    <button type="button" id="payWithPhonePeBtn" class="btn-phonepe">
+                        <i class="fab fa-phonepe"></i> Generate Payment QR
+                    </button>
+
+                    <!-- Dynamic QR area (hidden by default) -->
+                    <div id="dynamicQrArea" class="dynamic-qr-area">
+                        <p class="font-weight-bold" style="color:var(--phonepe);margin-bottom:8px;">
+                            <i class="fas fa-qrcode mr-1"></i> Scan with PhonePe
+                        </p>
+                        <img id="dynamicQrImage" class="qr-animated" src="" alt="Payment QR Code">
+                        <br>
+                        <a id="dynamicIntentLink" href="#" class="intent-link-btn">
+                            <i class="fab fa-phonepe mr-1"></i> Open PhonePe to Pay
+                        </a>
+                        <p class="order-id-text">Order ID: <span id="dynamicOrderId"></span></p>
+                    </div>
+
+                    <!-- Error display -->
+                    <div id="qrErrorBox" class="qr-error"></div>
+                </div>
+
+                <div class="payment-divider">OR</div>
+
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6">
+                        <label for="payment_utr">Payment UTR Number <span class="required-star">*</span></label>
+                        <input type="text" class="form-control" id="payment_utr" name="payment_utr" pattern="\d{12}" title="Please enter a valid 12-digit UTR number" required inputmode="numeric" maxlength="12">
+                        <small class="text-muted d-block mt-1" style="font-size:0.78rem;">
+                            Enter the 12-digit UTR from your PhonePe payment confirmation
+                        </small>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit mt-3">
+                    <i class="fas fa-paper-plane mr-1"></i> Submit Registration
+                </button>
+            </form>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="alert alert-success mt-3">
+                        <ul class="mb-0">
+                            {% for message in messages %}
+                                <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p class="mb-1">&copy; 2025 IQBAL PATEL PRIMARY &amp; HIGH SCHOOL. All Rights Reserved.</p>
+        <p class="mb-0">Developed by <a href="https://www.vswadatasolutions.in" target="_blank">VSWA Data Solutions</a></p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.5/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- ===== PhonePe Dynamic QR Script ===== -->
+    <script>
+    (function() {
+        const payBtn = document.getElementById('payWithPhonePeBtn');
+        const qrArea = document.getElementById('dynamicQrArea');
+        const qrImage = document.getElementById('dynamicQrImage');
+        const intentLink = document.getElementById('dynamicIntentLink');
+        const orderIdSpan = document.getElementById('dynamicOrderId');
+        const errorBox = document.getElementById('qrErrorBox');
+
+        // Payment amount in rupees (change this as needed)
+        const PAYMENT_AMOUNT_RUPEES = 100;
+
+        payBtn.addEventListener('click', function() {
+            // Reset UI
+            errorBox.classList.remove('show');
+            errorBox.textContent = '';
+            qrArea.classList.remove('show');
+
+            // Loading state
+            payBtn.disabled = true;
+            const originalHtml = payBtn.innerHTML;
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating QR...';
+
+            fetch('/admin/generate_payment_qr', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: Math.round(PAYMENT_AMOUNT_RUPEES * 100) })
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (data.success && data.qrData) {
+                    // Render QR using public QR service (for production, use local qrcode.js)
+                    qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
+                                  + encodeURIComponent(data.qrData);
+                    intentLink.href = data.intentUrl || '#';
+                    orderIdSpan.textContent = data.orderId || '-';
+                    qrArea.classList.add('show');
+
+                    // If on mobile and intentUrl exists, auto-open PhonePe after short delay
+                    if (data.intentUrl && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                        setTimeout(function() {
+                            window.location.href = data.intentUrl;
+                        }, 800);
+                    }
+                } else {
+                    errorBox.textContent = data.error || 'Failed to generate payment QR. Please try again.';
+                    errorBox.classList.add('show');
+                }
+            })
+            .catch(function(err) {
+                errorBox.textContent = 'Network error: ' + err.message;
+                errorBox.classList.add('show');
+            })
+            .finally(function() {
+                payBtn.disabled = false;
+                payBtn.innerHTML = originalHtml;
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

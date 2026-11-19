@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="theme-color" content="#0a2b4e">
+    <title>Hall Ticket | Free Hostel Entrance Exam 2027-28</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2b4e;
+            --primary-light: #1c4f8a;
+            --accent: #007bff;
+            --gold: #ffc107;
+            --bg: #f0f4f8;
+            --card-bg: #fff;
+            --text: #2c3e50;
+            --muted: #6c757d;
+            --border: #e2e8f0;
+            --radius: 12px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg);
+            font-family: 'Segoe UI', 'Noto Sans Kannada', system-ui, sans-serif;
+            color: var(--text);
+            font-size: 15px;
+            overflow-x: hidden;
+        }
+
+        .ticket-wrapper {
+            max-width: 900px;
+            margin: 24px auto;
+            padding: 0 12px;
+        }
+        .ticket-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 40px rgba(10,43,78,0.15);
+            padding: clamp(16px, 4vw, 36px);
+            border-top: 5px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+        .ticket-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(0,123,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .ticket-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed var(--border);
+            margin-bottom: 20px;
+        }
+        .ticket-logo {
+            width: clamp(64px, 14vw, 90px);
+            height: clamp(64px, 14vw, 90px);
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            background: #fff;
+            margin-bottom: 8px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+        }
+        .ticket-header h6 {
+            font-size: clamp(0.7rem, 2vw, 0.88rem);
+            color: var(--muted);
+            margin: 2px 0;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+        .ticket-header h4 {
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            font-weight: 800;
+            color: var(--primary);
+            margin: 10px 0 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ticket-header .exam-date {
+            font-size: clamp(0.78rem, 2.2vw, 0.92rem);
+            color: var(--text);
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .ticket-header .exam-date strong { color: var(--accent); }
+
+        /* INFO TABLE */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: clamp(0.82rem, 2.4vw, 0.95rem);
+        }
+        .info-table tr { border-bottom: 1px solid var(--border); }
+        .info-table tr:last-child { border-bottom: none; }
+        .info-table th {
+            text-align: left;
+            width: 38%;
+            padding: 10px 12px;
+            background: #f8fafc;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: clamp(0.75rem, 2.2vw, 0.88rem);
+            vertical-align: middle;
+            border-radius: 4px 0 0 4px;
+        }
+        .info-table td {
+            padding: 10px 12px;
+            vertical-align: middle;
+            word-break: break-word;
+        }
+        .info-table td img {
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            max-width: 100%;
+            height: auto;
+            background: #fafbfc;
+        }
+        .photo-cell img { width: 120px; height: 140px; object-fit: cover; }
+        .signature-cell img { width: 140px; height: 70px; object-fit: contain; }
+
+        /* INSTRUCTIONS */
+        .instructions-box {
+            background: #e9f7fe;
+            border: 1px solid #b6dff5;
+            border-radius: 10px;
+            padding: clamp(14px, 3.5vw, 24px);
+            margin-top: 24px;
+        }
+        .instructions-box h5 {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: clamp(0.92rem, 2.6vw, 1.08rem);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .instructions-box h5 i { color: var(--accent); }
+        .instructions-box ul {
+            margin: 0 0 16px 0;
+            padding-left: 20px;
+            font-size: clamp(0.78rem, 2.2vw, 0.9rem);
+            line-height: 1.75;
+        }
+        .instructions-box ul:last-of-type { margin-bottom: 0; }
+        .instructions-box li { margin-bottom: 4px; }
+
+        /* PRINT BUTTON */
+        .btn-print {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary-light) 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 32px;
+            font-weight: 700;
+            font-size: clamp(0.88rem, 2.5vw, 1rem);
+            box-shadow: 0 4px 14px rgba(0,123,255,0.3);
+            transition: transform 0.15s, box-shadow 0.2s;
+        }
+        .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0,123,255,0.4);
+            color: #fff;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 575.98px) {
+            body { font-size: 14px; }
+            .ticket-card { padding: 16px 12px; }
+            .info-table th { width: 42%; font-size: 0.75rem; padding: 8px; }
+            .info-table td { padding: 8px; font-size: 0.8rem; }
+            .photo-cell img { width: 90px; height: 110px; }
+            .signature-cell img { width: 100px; height: 55px; }
+            .btn-print { width: 100%; padding: 12px; }
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body { background: #fff; }
+            .ticket-wrapper { margin: 0; padding: 0; max-width: 100%; }
+            .ticket-card { box-shadow: none; border: 1px solid #ccc; border-radius: 0; padding: 16px; }
+            .btn-print, .no-print { display: none !important; }
+            .instructions-box { break-inside: avoid; }
+            .ticket-card::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ticket-wrapper">
+        <div class="ticket-card">
+
+            <!-- HEADER -->
+            <div class="ticket-header">
+                <img src="static/img/logo.jpg" alt="IQBAL PATEL SCHOOL Logo" class="ticket-logo">
+                <h6>ಶಿಕ್ಷಣದಲ್ಲಿ ಹಿಂದುಳಿದ ಕಲ್ಯಾಣ ಕರ್ನಾಟಕದ ಅಭಿವೃದ್ಧಿಗಾಗಿ ಆಯೋಜಿಸಿರುವ</h6>
+                <h6>ವಿದ್ಯಾರ್ಥಿಯ ಸರ್ವೋತಮುಖ ಬೆಳವಣಿಗೆಗಾಗಿ ಹಿಂದುಳಿದ ಹಾಗೂ ಬಡ ಕುಟುಂಬದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗಾಗಿ ಉಚಿತ ವಸತಿ ಶಾಲೆಯ ಪ್ರವೇಶ ಅರ್ಜಿ 2027-28</h6>
+                <h4><i class="fas fa-ticket-alt mr-2"></i>Hall Ticket</h4>
+                <div class="exam-date">
+                    <p class="mb-1">A/c &amp; Non-A/c Hostel for Boys and Girls</p>
+                    <p class="mb-0"><strong>Phase 1:</strong> 07 Feb 2027 (Sun) &nbsp;|&nbsp; <strong>Phase 2:</strong> 06 Apr 2027 (Tue)</p>
+                    <p class="mb-0">Batch: <strong>11:30 AM – 01:30 PM</strong> &amp; <strong>02:30 PM – 04:30 PM</strong></p>
+                </div>
+            </div>
+
+            <!-- INFO TABLE -->
+            <table class="info-table">
+                <tr>
+                    <th>Hall Ticket Number</th>
+                    <td><strong style="color:var(--accent);font-size:1.1em;">{{ student.hall_ticket }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Uploaded Photo</th>
+                    <td class="photo-cell">
+                        <img src="{{ url_for('static', filename='uploads/' + student.photo.split('/')[-1]) }}" alt="Photo">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Uploaded Signature</th>
+                    <td class="signature-cell">
+                        <img src="{{ url_for('static', filename='uploads/' + student.signature.split('/')[-1]) }}" alt="Signature">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Name of Candidate</th>
+                    <td><strong>{{ student.name }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Father's Name</th>
+                    <td>{{ student.father_name }}</td>
+                </tr>
+                <tr>
+                    <th>Date of Birth</th>
+                    <td>{{ student.dob }}</td>
+                </tr>
+                <tr>
+                    <th>Class</th>
+                    <td>{{ student.class }}</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>{{ student.gender }}</td>
+                </tr>
+                <tr>
+                    <th>Medium</th>
+                    <td>{{ student.medium }}</td>
+                </tr>
+                <tr>
+                    <th>Examination Centre</th>
+                    <td>{{ student.exam_center }}</td>
+                </tr>
+                <tr>
+                    <th>Signature of Examiner</th>
+                    <td style="height:40px;"></td>
+                </tr>
+            </table>
+
+            <!-- INSTRUCTIONS -->
+            <div class="instructions-box">
+                <h5><i class="fas fa-clipboard-list"></i> Instructions to the Candidates</h5>
+                <ul>
+                    <li>Be present at the exam center <strong>30 minutes before</strong> the exam.</li>
+                    <li>Do not carry any belongings inside the exam center — including mobile phones, Bluetooth devices, or any electronic devices.</li>
+                    <li>You are allowed to carry only <strong>one pen and pencil</strong> inside the exam center.</li>
+                    <li>Bring your <strong>hall ticket and Aadhaar card</strong> for identification.</li>
+                    <li>Attach the hall ticket to the application form as instructed.</li>
+                    <li>Submit the duly filled application form by <strong>12th February 2025</strong>.</li>
+                    <li>For clarifications, contact: <strong>9740307344 / 8971056786</strong>.</li>
+                </ul>
+
+                <h5><i class="fas fa-language"></i> ಪರೀಕ್ಷಾರ್ಥಿಗಳಿಗೆ ನಿರ್ದೇಶನಗಳು</h5>
+                <ul>
+                    <li>ನೀವು ಪರೀಕ್ಷಾ ಕೇಂದ್ರಕ್ಕೆ <strong>30 ನಿಮಿಷ ಮೊದಲು</strong> ಹಾಜರಾಗಬೇಕು.</li>
+                    <li>ಮೊಬೈಲ್ ಫೋನ್, ಬ್ಲೂಟೂತ್ ಸಾಧನಗಳು ಅಥವಾ ಇತರ ಎಲೆಕ್ಟ್ರಾನಿಕ್ ಸಾಧನಗಳನ್ನು ಒಳಗೊಂಡಂತೆ ಯಾವುದೇ ವಸ್ತುಗಳನ್ನು ಪರೀಕ್ಷಾ ಕೇಂದ್ರಕ್ಕೆ ತರಬೇಡಿ.</li>
+                    <li>ನೀವು ಪರೀಕ್ಷಾ ಕೇಂದ್ರಕ್ಕೆ ಕೇವಲ <strong>ಒಂದು ಪೆನ್ ಮತ್ತು ಪೆನ್ಸಿಲ್</strong> ಮಾತ್ರ ತೆಗೆದುಕೊಂಡು ಹೋಗಬಹುದು.</li>
+                    <li>ನಿಮ್ಮ <strong>ಹಾಲ್ ಟಿಕೆಟ್ ಮತ್ತು ಆಧಾರ್ ಕಾರ್ಡ್</strong> ಅನ್ನು ಗುರುತಿಗಾಗಿ ತರಲು ಮರೆಯಬೇಡಿ.</li>
+                    <li>ನಿರ್ದೇಶಿಸಿದಂತೆ ಹಾಲ್ ಟಿಕೆಟ್ ಅನ್ನು ಅರ್ಜಿ ನಮೂನೆಗೆ ಜೋಡಿಸಿ.</li>
+                    <li>ಪೂರ್ಣಗೊಂಡ ಅರ್ಜಿ ನಮೂನೆಯನ್ನು <strong>2025ರ ಫೆಬ್ರವರಿ 12ರೊಳಗೆ</strong> ಸಲ್ಲಿಸಿ.</li>
+                    <li>ಸ್ಪಷ್ಟೀಕರಣಗಳಿಗಾಗಿ ಸಂಪರ್ಕಿಸಿ: <strong>9740307344 / 8971056786</strong>.</li>
+                </ul>
+            </div>
+
+            <!-- PRINT BUTTON -->
+            <div class="text-center mt-4 no-print">
+                <button onclick="window.print()" class="btn-print">
+                    <i class="fas fa-print mr-2"></i> Print Hall Ticket
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
