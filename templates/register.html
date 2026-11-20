@@ -648,12 +648,12 @@
                     validateFile('signature', 'Signature');
                 </script>
 
-                <!-- ===== PAYMENT SECTION (UPDATED) ===== -->
+                <!-- ===== PAYMENT SECTION (UPDATED WITH UPI DEEP LINK) ===== -->
                 <div class="section-title"><i class="fas fa-rupee-sign"></i> Payment Information</div>
 
                 <div class="payment-box">
-                    <h5><i class="fas fa-mobile-alt mr-1"></i> Pay with PhonePe</h5>
-                    <p>Click below to generate a secure QR code and pay via PhonePe</p>
+                    <h5><i class="fas fa-mobile-alt mr-1"></i> Pay with PhonePe / UPI</h5>
+                    <p>Click below to generate a secure QR code or open your UPI app directly</p>
 
                     <button type="button" id="payWithPhonePeBtn" class="btn-phonepe">
                         <i class="fab fa-phonepe"></i> Generate Payment QR
@@ -662,12 +662,12 @@
                     <!-- Dynamic QR area (hidden by default) -->
                     <div id="dynamicQrArea" class="dynamic-qr-area">
                         <p class="font-weight-bold" style="color:var(--phonepe);margin-bottom:8px;">
-                            <i class="fas fa-qrcode mr-1"></i> Scan with PhonePe
+                            <i class="fas fa-qrcode mr-1"></i> Scan with PhonePe / any UPI app
                         </p>
                         <img id="dynamicQrImage" class="qr-animated" src="" alt="Payment QR Code">
                         <br>
                         <a id="dynamicIntentLink" href="#" class="intent-link-btn">
-                            <i class="fab fa-phonepe mr-1"></i> Open PhonePe to Pay
+                            <i class="fab fa-phonepe mr-1"></i> Open UPI App to Pay
                         </a>
                         <p class="order-id-text">Order ID: <span id="dynamicOrderId"></span></p>
                     </div>
@@ -708,15 +708,18 @@
     </main>
 
     <footer class="site-footer">
-        <p class="mb-1">&copy; 2025 IQBAL PATEL PRIMARY &amp; HIGH SCHOOL. All Rights Reserved.</p>
-        <p class="mb-0">Developed by <a href="https://www.vswadatasolutions.in" target="_blank">VSWA Data Solutions</a></p>
+        <p class="mb-1">&copy; 2026-27 IQBAL PATEL PRIMARY &amp; HIGH SCHOOL. All Rights Reserved.</p>
+        <p class="mb-0">Developed by <a href="https://www.vswdatasolutions.in" target="_blank">VSWA Data Solutions</a></p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.5/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- ===== PhonePe Dynamic QR Script ===== -->
+    <!-- QR Code library (local rendering, no external API call) -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+    <!-- ===== PhonePe / UPI Dynamic QR Script ===== -->
     <script>
     (function() {
         const payBtn = document.getElementById('payWithPhonePeBtn');
@@ -726,8 +729,60 @@
         const orderIdSpan = document.getElementById('dynamicOrderId');
         const errorBox = document.getElementById('qrErrorBox');
 
-        // Payment amount in rupees (change this as needed)
+        // ============================================================
+        // ⚙️ CONFIGURATION — CHANGE THESE VALUES
+        // ============================================================
+        // Payment amount in rupees
         const PAYMENT_AMOUNT_RUPEES = 100;
+
+        // ⚠️ ADMIN's PhonePe UPI ID — replace with the school's actual UPI ID
+        // Examples: '9876543210@ybl' (PhonePe), 'school@okaxis', 'school@okhdfcbank'
+        const ADMIN_UPI_ID = 'your-upi-id@ybl';
+
+        // Payee name shown in the UPI app
+        const ADMIN_NAME = 'IQBAL PATEL SCHOOL';
+
+        // Payment note/remark
+        const PAYMENT_NOTE = 'Student Registration Fee';
+
+        // ============================================================
+
+        /**
+         * Build a standard UPI deep link that works with PhonePe, GPay, Paytm, etc.
+         * Format: upi://pay?pa=<vpa>&pn=<name>&am=<amount>&cu=INR&tn=<note>
+         */
+        function buildUpiIntent(upiId, name, amount, note) {
+            const params = new URLSearchParams({
+                pa: upiId,
+                pn: name,
+                am: amount.toFixed(2),
+                cu: 'INR',
+                tn: note || 'Payment'
+            });
+            return 'upi://pay?' + params.toString();
+        }
+
+        /**
+         * Build a PhonePe-specific deep link (Android only — opens PhonePe directly
+         * without the app-chooser dialog).
+         */
+        function buildPhonePeIntent(upiId, name, amount, note) {
+            const params = new URLSearchParams({
+                pa: upiId,
+                pn: name,
+                am: amount.toFixed(2),
+                cu: 'INR',
+                tn: note || 'Payment'
+            });
+            return 'phonepe://upi/pay?' + params.toString();
+        }
+
+        /**
+         * Detect if the user is on a mobile device (Android/iOS).
+         */
+        function isMobile() {
+            return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        }
 
         payBtn.addEventListener('click', function() {
             // Reset UI
@@ -735,46 +790,108 @@
             errorBox.textContent = '';
             qrArea.classList.remove('show');
 
+            // Build the UPI intent link locally (no backend needed for this part)
+            const upiIntent = buildUpiIntent(
+                ADMIN_UPI_ID,
+                ADMIN_NAME,
+                PAYMENT_AMOUNT_RUPEES,
+                PAYMENT_NOTE
+            );
+
+            // Generate a unique order reference for display
+            const orderRef = 'REG-' + Date.now();
+
             // Loading state
             payBtn.disabled = true;
             const originalHtml = payBtn.innerHTML;
             payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating QR...';
 
+            // Try the backend first (for order tracking / logging), but fall back
+            // to pure frontend UPI intent if the backend is unavailable.
             fetch('/admin/generate_payment_qr', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: Math.round(PAYMENT_AMOUNT_RUPEES * 100) })
+                body: JSON.stringify({
+                    amount: Math.round(PAYMENT_AMOUNT_RUPEES * 100),
+                    upi_id: ADMIN_UPI_ID,
+                    note: PAYMENT_NOTE
+                })
             })
-            .then(function(res) { return res.json(); })
+            .then(function(res) {
+                if (!res.ok) throw new Error('Backend responded with ' + res.status);
+                return res.json();
+            })
             .then(function(data) {
-                if (data.success && data.qrData) {
-                    // Render QR using public QR service (for production, use local qrcode.js)
-                    qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
-                                  + encodeURIComponent(data.qrData);
-                    intentLink.href = data.intentUrl || '#';
-                    orderIdSpan.textContent = data.orderId || '-';
-                    qrArea.classList.add('show');
+                // Prefer backend-provided intentUrl if available; otherwise use our local one
+                const finalIntent = data.intentUrl || upiIntent;
+                const finalOrderId = data.orderId || orderRef;
 
-                    // If on mobile and intentUrl exists, auto-open PhonePe after short delay
-                    if (data.intentUrl && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                        setTimeout(function() {
-                            window.location.href = data.intentUrl;
-                        }, 800);
-                    }
-                } else {
-                    errorBox.textContent = data.error || 'Failed to generate payment QR. Please try again.';
-                    errorBox.classList.add('show');
-                }
+                renderQr(upiIntent, finalIntent, finalOrderId);
             })
             .catch(function(err) {
-                errorBox.textContent = 'Network error: ' + err.message;
-                errorBox.classList.add('show');
+                // Backend failed — still show QR using the locally-built UPI intent.
+                // This ensures the payment flow never breaks even if the server is down.
+                console.warn('Backend QR generation failed, using local UPI intent:', err.message);
+                renderQr(upiIntent, upiIntent, orderRef);
             })
             .finally(function() {
                 payBtn.disabled = false;
                 payBtn.innerHTML = originalHtml;
             });
         });
+
+        /**
+         * Render the QR code + intent link + order ID in the UI.
+         */
+        function renderQr(qrData, intentUrl, orderId) {
+            // Use local qrcode.js library to render QR (no external API dependency)
+            if (window.QRCode && typeof QRCode.toDataURL === 'function') {
+                QRCode.toDataURL(qrData, {
+                    width: 200,
+                    margin: 1,
+                    color: { dark: '#5f259f', light: '#ffffff' }
+                }, function(err, url) {
+                    if (err) {
+                        // Fallback to external QR service
+                        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
+                                      + encodeURIComponent(qrData);
+                    } else {
+                        qrImage.src = url;
+                    }
+                });
+            } else {
+                // qrcode.js not loaded — fallback to external API
+                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
+                              + encodeURIComponent(qrData);
+            }
+
+            // Set the intent link
+            intentLink.href = intentUrl;
+            orderIdSpan.textContent = orderId;
+            qrArea.classList.add('show');
+
+            // On mobile: auto-open the UPI app after a short delay
+            // (gives user a moment to see the QR before the app opens)
+            if (isMobile() && intentUrl && intentUrl !== '#') {
+                setTimeout(function() {
+                    // Try PhonePe-specific scheme first on Android, fall back to generic upi://
+                    const isAndroid = /Android/i.test(navigator.userAgent);
+                    if (isAndroid) {
+                        const phonepeLink = buildPhonePeIntent(
+                            ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE
+                        );
+                        // Attempt PhonePe, fall back to generic UPI after 1.5s if app not installed
+                        window.location.href = phonepeLink;
+                        setTimeout(function() {
+                            window.location.href = intentUrl;
+                        }, 1500);
+                    } else {
+                        // iOS: use universal upi:// scheme
+                        window.location.href = intentUrl;
+                    }
+                }, 800);
+            }
+        }
     })();
     </script>
 </body>
