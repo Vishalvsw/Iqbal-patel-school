@@ -11,8 +11,9 @@ import json
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
-DATABASE = 'school.db'
-UPLOAD_FOLDER = 'static/uploads'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, 'school.db')
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # Ensure the upload folder exists every time the app starts
