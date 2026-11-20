@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="theme-color" content="#0a2b4e">
+    <title>Payment Info | IQBAL PATEL SCHOOL</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0a2b4e;
+            --primary-light: #1c4f8a;
+            --accent: #007bff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --bg: #f0f4f8;
+            --card-bg: #fff;
+            --text: #2c3e50;
+            --muted: #6c757d;
+            --border: #e2e8f0;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(10,43,78,0.08);
+            --phonepe: #5f259f;
+            --sidebar-width: 250px;
+        }
+        * { box-sizing: border-box; }
+        body {
+            background: var(--bg); font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--text); font-size: 15px; overflow-x: hidden; margin: 0;
+        }
+
+        /* ===== SIDEBAR (Same as Admin) ===== */
+        .sidebar {
+            position: fixed; top: 0; left: 0; height: 100vh; width: var(--sidebar-width);
+            background: var(--primary); color: #fff; z-index: 1000;
+            transition: all 0.3s ease; box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
+        }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h4 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--warning); }
+        .sidebar-menu { padding: 20px 0; list-style: none; margin: 0; flex: 1; }
+        .sidebar-menu li a {
+            display: flex; align-items: center; padding: 12px 20px;
+            color: rgba(255,255,255,0.8); text-decoration: none; transition: all 0.2s; border-left: 4px solid transparent;
+        }
+        .sidebar-menu li a:hover, .sidebar-menu li a.active {
+            background: rgba(255,255,255,0.1); color: #fff; border-left-color: var(--accent);
+        }
+        .sidebar-menu li a i { width: 25px; margin-right: 10px; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content { margin-left: var(--sidebar-width); padding: 20px; min-height: 100vh; }
+        .top-navbar {
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 15px 20px; box-shadow: var(--shadow);
+            margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .top-navbar h2 { margin: 0; font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .btn-mobile-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--primary); }
+
+        /* ===== CARDS ===== */
+        .main-card {
+            background: var(--card-bg); border-radius: var(--radius);
+            box-shadow: var(--shadow); padding: clamp(16px, 4vw, 32px);
+            border-top: 5px solid var(--accent);
+        }
+        .main-card h2 { font-size: 1.3rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; }
+        .main-card h2 i { color: var(--accent); margin-right: 10px; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 991.98px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .btn-mobile-toggle { display: block; }
+        }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
+        .sidebar-overlay.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h4>IQBAL PATEL</h4>
+            <p>Admin Portal</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="{{ url_for('register') }}" target="_blank"><i class="fas fa-user-plus"></i> New Registration</a></li>
+            <li><a href="/download_csv"><i class="fas fa-file-csv"></i> Export Data (CSV)</a></li>
+            <!-- THIS IS THE NEW ACTIVE LINK -->
+            <li><a href="{{ url_for('payment_info') }}" class="active"><i class="fas fa-qrcode"></i> Payment Info</a></li>
+        </ul>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="top-navbar">
+            <div class="d-flex align-items-center">
+                <button class="btn-mobile-toggle mr-3" id="mobileToggle"><i class="fas fa-bars"></i></button>
+                <h2><i class="fas fa-qrcode mr-2"></i>Payment Information</h2>
+            </div>
+        </div>
+
+        <div class="main-card">
+            <h2><i class="fas fa-university"></i> Active UPI Details</h2>
+            <p class="text-muted">Your system is currently using the <strong>Direct UPI method</strong>.</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-6 mb-4">
+                    <div class="p-4" style="background:#f8fafc; border-radius:10px; border:1px solid var(--border);">
+                        <h5 class="font-weight-bold mb-3 text-primary">School Account</h5>
+                        <p class="mb-2"><strong>UPI ID:</strong> <code style="font-size:1.1rem; color:#d63384;">your-upi-id@ybl</code></p>
+                        <p class="mb-2"><strong>Account Name:</strong> IQBAL PATEL SCHOOL</p>
+                        <p class="mb-0"><strong>Payment Amount:</strong> ₹100.00</p>
+                        
+                        <div class="alert alert-info mt-4 mb-0 py-2" style="font-size:0.85rem;">
+                            <i class="fas fa-info-circle mr-1"></i> To update the UPI ID, change the <code>ADMIN_UPI_ID</code> variable inside <code>register.html</code>.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 mb-4 text-center">
+                    <div class="p-4" style="background:#fff; border-radius:10px; border:2px dashed var(--phonepe); display:inline-block;">
+                        <h5 class="font-weight-bold mb-3" style="color:var(--phonepe);">Static QR Code</h5>
+                        <!-- YOUR QR IMAGE -->
+                        <img src="{{ url_for('static', filename='img/school_qr.jpg') }}" alt="School QR Code" style="max-width: 250px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <p class="mt-3 mb-0 text-muted" style="font-size:0.8rem;">This image is shown to students on the registration page.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    const mobileToggle = document.getElementById('mobileToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    mobileToggle.addEventListener('click', () => {
+        sidebar.classList.add('active');
+        overlay.classList.add('active');
+    });
+
+    overlay.addEventListener('click', () => {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    });
+    </script>
+</body>
+</html>

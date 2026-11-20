@@ -23,13 +23,12 @@
             --radius: 12px;
             --shadow: 0 4px 20px rgba(10,43,78,0.08);
             --phonepe: #5f259f;
-            --phonepe-light: #7b3fb5;
             --sidebar-width: 250px;
         }
         * { box-sizing: border-box; }
         body {
             background: var(--bg);
-            font-family: 'Segoe UI', 'Noto Sans Kannada', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             color: var(--text);
             font-size: 15px;
             overflow-x: hidden;
@@ -38,120 +37,43 @@
 
         /* ===== SIDEBAR ===== */
         .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: var(--sidebar-width);
-            background: var(--primary);
-            color: #fff;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+            position: fixed; top: 0; left: 0; height: 100vh; width: var(--sidebar-width);
+            background: var(--primary); color: #fff; z-index: 1000;
+            transition: all 0.3s ease; box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            display: flex; flex-direction: column;
         }
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .sidebar-header h4 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 800;
-            color: var(--warning);
-            letter-spacing: 0.5px;
-        }
-        .sidebar-header p {
-            margin: 5px 0 0;
-            font-size: 0.75rem;
-            opacity: 0.8;
-        }
-        .sidebar-menu {
-            padding: 20px 0;
-            list-style: none;
-            margin: 0;
-            flex: 1;
-            overflow-y: auto;
-        }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h4 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--warning); letter-spacing: 0.5px; }
+        .sidebar-header p { margin: 5px 0 0; font-size: 0.75rem; opacity: 0.8; }
+        .sidebar-menu { padding: 20px 0; list-style: none; margin: 0; flex: 1; overflow-y: auto; }
         .sidebar-menu li a {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: all 0.2s;
-            border-left: 4px solid transparent;
+            display: flex; align-items: center; padding: 12px 20px;
+            color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.95rem;
+            transition: all 0.2s; border-left: 4px solid transparent;
         }
         .sidebar-menu li a:hover, .sidebar-menu li a.active {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border-left-color: var(--accent);
+            background: rgba(255,255,255,0.1); color: #fff; border-left-color: var(--accent);
         }
-        .sidebar-menu li a i {
-            width: 25px;
-            margin-right: 10px;
-            text-align: center;
-        }
-        .sidebar-footer {
-            padding: 20px;
-            text-align: center;
-            font-size: 0.75rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            opacity: 0.6;
-        }
+        .sidebar-menu li a i { width: 25px; margin-right: 10px; text-align: center; }
+        .sidebar-footer { padding: 20px; text-align: center; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); opacity: 0.6; }
 
         /* ===== MAIN CONTENT ===== */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 20px;
-            transition: all 0.3s ease;
-            min-height: 100vh;
-        }
+        .main-content { margin-left: var(--sidebar-width); padding: 20px; transition: all 0.3s ease; min-height: 100vh; }
         .top-navbar {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 15px 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: var(--card-bg); border-radius: var(--radius);
+            padding: 15px 20px; box-shadow: var(--shadow);
+            margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;
         }
-        .top-navbar h2 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .btn-mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--primary);
-            cursor: pointer;
-        }
+        .top-navbar h2 { margin: 0; font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+        .btn-mobile-toggle { display: none; background: none; border: none; font-size: 1.5rem; color: var(--primary); cursor: pointer; }
 
         /* ===== CARDS ===== */
         .main-card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: clamp(16px, 4vw, 32px);
-            border-top: 5px solid var(--accent);
-            margin-bottom: 24px;
+            background: var(--card-bg); border-radius: var(--radius);
+            box-shadow: var(--shadow); padding: clamp(16px, 4vw, 32px);
+            border-top: 5px solid var(--accent); margin-bottom: 24px;
         }
-        .main-card h2 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            color: var(--primary);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-        }
+        .main-card h2 { font-size: 1.3rem; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; }
         .main-card h2 i { color: var(--accent); margin-right: 10px; }
 
         /* ===== TABLE ===== */
@@ -169,32 +91,13 @@
         .btn-group { display: flex; flex-wrap: wrap; gap: 4px; }
 
         /* ===== FORMS & BUTTONS ===== */
-        .form-control {
-            border-radius: 8px; border: 1.5px solid var(--border);
-            font-size: 0.9rem; padding: 10px 14px;
-        }
+        .form-control { border-radius: 8px; border: 1.5px solid var(--border); font-size: 0.9rem; padding: 10px 14px; }
         .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,123,255,0.12); }
-        .btn-search {
-            background: var(--accent); color: #fff; border: none; border-radius: 8px;
-            padding: 10px 20px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s;
-        }
+        .btn-search { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
         .btn-search:hover { background: #0056b3; color: #fff; transform: translateY(-1px); }
-        .btn-download { background: var(--success); color: #fff; border: none; border-radius: 8px; padding: 10px 22px; font-weight: 600; }
-        .btn-download:hover { background: #1e7e34; color: #fff; }
 
         /* ===== ALERTS ===== */
         .alert { border-radius: 10px; font-size: 0.9rem; border: none; border-left: 5px solid; }
-
-        /* ===== QR ANIMATION & BADGES ===== */
-        @keyframes qrPulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0.4); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(95,37,159,0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0); }
-        }
-        .qr-animated { animation: qrPulse 2s infinite; border-radius: 10px; }
-        .config-status { padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600; margin-left: 8px; }
-        .config-status.ok { background: #d4edda; color: #155724; }
-        .config-status.missing { background: #f8d7da; color: #721c24; }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 991.98px) {
@@ -210,17 +113,12 @@
             .btn-sm { width: 100%; margin-bottom: 2px; }
         }
 
-        /* Overlay for mobile sidebar */
-        .sidebar-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 999;
-        }
+        .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; }
         .sidebar-overlay.active { display: block; }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR OVERLAY FOR MOBILE -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- SIDEBAR -->
@@ -233,8 +131,7 @@
             <li><a href="{{ url_for('admin_dashboard') }}" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="{{ url_for('register') }}" target="_blank"><i class="fas fa-user-plus"></i> New Registration</a></li>
             <li><a href="/download_csv"><i class="fas fa-file-csv"></i> Export Data (CSV)</a></li>
-            <li><a href="#paymentSettings" onclick="document.getElementById('paymentSettings').scrollIntoView({behavior: 'smooth'}); return false;"><i class="fas fa-cog"></i> Payment Settings</a></li>
-            <li><a href="#" onclick="alert('Logout feature not implemented yet.');"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            <li><a href="#paymentInfo" onclick="document.getElementById('paymentInfo').scrollIntoView({behavior: 'smooth'}); return false;"><i class="fas fa-qrcode"></i> Payment Info</a></li>
         </ul>
         <div class="sidebar-footer">
             &copy; 2027 IQBAL PATEL
@@ -358,96 +255,37 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- Pagination -->
-            {% if pagination %}
-                <nav aria-label="Page navigation" class="mt-3">
-                    <ul class="pagination justify-content-center">
-                        {% if pagination.has_prev %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_dashboard', page=pagination.prev_num, search=request.args.get('search',''), class=request.args.get('class','')) }}"><i class="fas fa-chevron-left"></i></a>
-                            </li>
-                        {% endif %}
-                        {% for page_num in pagination.iter_pages() %}
-                            {% if page_num %}
-                                <li class="page-item {% if page_num == pagination.page %}active{% endif %}">
-                                    <a class="page-link" href="{{ url_for('admin_dashboard', page=page_num, search=request.args.get('search',''), class=request.args.get('class','')) }}">{{ page_num }}</a>
-                                </li>
-                            {% else %}
-                                <li class="page-item disabled"><a class="page-link">…</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if pagination.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('admin_dashboard', page=pagination.next_num, search=request.args.get('search',''), class=request.args.get('class','')) }}"><i class="fas fa-chevron-right"></i></a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-            {% endif %}
         </div>
 
-        <!-- PAYMENT SETTINGS CARD -->
-        <div class="main-card" id="paymentSettings">
-            <h2>
-                <i class="fas fa-cog"></i> PhonePe Settings
-                <span id="configStatusBadge" class="config-status missing ml-3">Not Configured</span>
-            </h2>
-
-            <div class="p-3 mb-4" style="background:#f8fafc; border-radius:10px; border:1px solid var(--border);">
-                <div class="form-row">
-                    <div class="form-group col-12 col-md-6">
-                        <label class="font-weight-bold" style="font-size:0.8rem;color:var(--muted);">Client ID <span style="color:#dc3545;">*</span></label>
-                        <input type="text" id="phonepeClientId" class="form-control" placeholder="e.g. YOUR_CLIENT_ID">
-                    </div>
-                    <div class="form-group col-12 col-md-6">
-                        <label class="font-weight-bold" style="font-size:0.8rem;color:var(--muted);">Client Secret <span style="color:#dc3545;">*</span></label>
-                        <input type="password" id="phonepeClientSecret" class="form-control" placeholder="Enter Client Secret">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group col-12 col-md-4">
-                        <label class="font-weight-bold" style="font-size:0.8rem;color:var(--muted);">Merchant ID <span style="color:#dc3545;">*</span></label>
-                        <input type="text" id="phonepeMerchantId" class="form-control" placeholder="e.g. PGTESTPAYUAT">
-                    </div>
-                    <div class="form-group col-12 col-md-4">
-                        <label class="font-weight-bold" style="font-size:0.8rem;color:var(--muted);">Client Version</label>
-                        <input type="text" id="phonepeClientVersion" class="form-control" placeholder="e.g. 1" value="1">
-                    </div>
-                    <div class="form-group col-12 col-md-4">
-                        <label class="font-weight-bold" style="font-size:0.8rem;color:var(--muted);">Environment</label>
-                        <select id="phonepeEnv" class="form-control">
-                            <option value="sandbox">Sandbox (Test)</option>
-                            <option value="production">Production</option>
-                        </select>
+        <!-- PAYMENT INFO (Replaced PhonePe Settings) -->
+        <div class="main-card" id="paymentInfo">
+            <h2><i class="fas fa-qrcode"></i> Active Payment Information</h2>
+            <p class="text-muted" style="font-size:0.9rem;">
+                Your system is currently using the <strong>Direct UPI method</strong>. Students scanning the QR code on the registration page will automatically be directed to this UPI ID.
+            </p>
+            
+            <div class="row mt-4">
+                <div class="col-md-6 mb-3">
+                    <div class="p-3" style="background:#f8fafc; border-radius:10px; border:1px solid var(--border);">
+                        <h5 class="font-weight-bold mb-3"><i class="fas fa-university text-primary mr-2"></i>School UPI Details</h5>
+                        <p class="mb-1"><strong>UPI ID:</strong> <code style="font-size:1rem;">your-upi-id@ybl</code></p>
+                        <p class="mb-1"><strong>Account Name:</strong> IQBAL PATEL SCHOOL</p>
+                        <p class="mb-0"><strong>Payment Amount:</strong> ₹100.00</p>
+                        <div class="alert alert-info mt-3 mb-0 py-2" style="font-size:0.8rem;">
+                            <i class="fas fa-info-circle mr-1"></i> To change this UPI ID, update the <code>ADMIN_UPI_ID</code> in <code>register.html</code>.
+                        </div>
                     </div>
                 </div>
-                <button type="button" id="savePhonePeConfig" class="btn-search mt-2"><i class="fas fa-save mr-1"></i> Save Configuration</button>
-            </div>
-
-            <hr>
-
-            <h3 style="font-size:1rem;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-qrcode mr-1"></i> Test Dynamic QR Code</h3>
-            <div class="form-row">
-                <div class="form-group col-12 col-md-4">
-                    <label class="font-weight-bold" style="font-size:0.8rem;color:var(--muted);">Amount (₹)</label>
-                    <input type="number" id="testAmount" class="form-control" value="1" min="1" step="1">
-                </div>
-                <div class="form-group col-12 col-md-4 d-flex align-items-end">
-                    <button type="button" id="generateTestQr" class="btn-search w-100" style="background:var(--success);"><i class="fas fa-magic mr-1"></i> Generate QR</button>
+                
+                <div class="col-md-6 mb-3 text-center">
+                    <div class="p-3" style="background:#fff; border-radius:10px; border:2px dashed var(--phonepe); display:inline-block;">
+                        <h5 class="font-weight-bold mb-3" style="color:var(--phonepe);">Static QR Code</h5>
+                        <!-- THIS SHOWS YOUR QR IMAGE FROM THE STATIC FOLDER -->
+                        <img src="{{ url_for('static', filename='img/school_qr.jpg') }}" alt="School QR Code" style="max-width: 200px; border-radius: 8px;">
+                        <p class="mt-2 mb-0 text-muted" style="font-size:0.75rem;">This image is displayed to students.</p>
+                    </div>
                 </div>
             </div>
-
-            <div id="qrResult" style="display:none;text-align:center;margin-top:20px;">
-                <div style="background:#fff;border:2px dashed var(--phonepe);border-radius:12px;padding:20px;display:inline-block;">
-                    <p style="font-weight:700;color:var(--primary);margin-bottom:8px;">Scan with PhonePe</p>
-                    <img id="qrImage" class="qr-animated" src="" alt="Payment QR" style="max-width:200px;">
-                    <br>
-                    <a id="intentLink" href="#" class="btn mt-3" style="background:var(--phonepe); color:#fff;"><i class="fab fa-phonepe mr-1"></i> Open PhonePe to Pay</a>
-                    <p style="margin-top:10px;font-size:0.8rem;color:var(--muted);">Order: <span id="qrOrderId"></span></p>
-                </div>
-            </div>
-            <div id="qrError" class="alert alert-danger" style="display:none;margin-top:12px;"></div>
         </div>
 
     </main>
@@ -471,103 +309,6 @@
     overlay.addEventListener('click', () => {
         sidebar.classList.remove('active');
         overlay.classList.remove('active');
-    });
-
-    // ===== CONFIG STATUS BADGE =====
-    function updateStatusBadge() {
-        const badge = document.getElementById('configStatusBadge');
-        const clientId = document.getElementById('phonepeClientId').value.trim();
-        const clientSecret = document.getElementById('phonepeClientSecret').value.trim();
-        const merchantId = document.getElementById('phonepeMerchantId').value.trim();
-        if (clientId && clientSecret && merchantId) {
-            badge.className = 'config-status ok ml-3';
-            badge.textContent = 'Configured';
-        } else {
-            badge.className = 'config-status missing ml-3';
-            badge.textContent = 'Not Configured';
-        }
-    }
-    ['phonepeClientId', 'phonepeClientSecret', 'phonepeMerchantId'].forEach(function(id) {
-        document.getElementById(id).addEventListener('input', updateStatusBadge);
-    });
-
-    // ===== SAVE CONFIG =====
-    document.getElementById('savePhonePeConfig').addEventListener('click', function() {
-        const config = {
-            client_id: document.getElementById('phonepeClientId').value.trim(),
-            client_secret: document.getElementById('phonepeClientSecret').value.trim(),
-            merchant_id: document.getElementById('phonepeMerchantId').value.trim(),
-            client_version: document.getElementById('phonepeClientVersion').value.trim(),
-            env: document.getElementById('phonepeEnv').value
-        };
-
-        if (!config.client_id || !config.client_secret || !config.merchant_id) {
-            alert('Please enter Client ID, Client Secret and Merchant ID');
-            return;
-        }
-
-        const btn = this;
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Saving...';
-
-        fetch('/admin/save_phonepe_config', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(config)
-        })
-        .then(r => r.json())
-        .then(d => {
-            if (d.success) {
-                alert('✅ Configuration saved successfully!');
-                updateStatusBadge();
-            } else {
-                alert('❌ Error: ' + d.error);
-            }
-        })
-        .catch(e => alert('❌ Network error: ' + e.message))
-        .finally(() => {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-save mr-1"></i> Save Configuration';
-        });
-    });
-
-    // ===== GENERATE TEST QR =====
-    document.getElementById('generateTestQr').addEventListener('click', function() {
-        const btn = this;
-        const qrResult = document.getElementById('qrResult');
-        const qrError = document.getElementById('qrError');
-        const amount = parseFloat(document.getElementById('testAmount').value) || 1;
-
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Generating...';
-        qrError.style.display = 'none';
-        qrResult.style.display = 'none';
-
-        fetch('/admin/generate_payment_qr', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({amount: Math.round(amount * 100)})
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success && data.qrData) {
-                document.getElementById('qrImage').src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(data.qrData);
-                document.getElementById('intentLink').href = data.intentUrl || '#';
-                document.getElementById('qrOrderId').textContent = data.orderId || '-';
-                qrResult.style.display = 'block';
-            } else {
-                qrError.textContent = data.error || 'Failed to generate QR';
-                qrError.style.display = 'block';
-            }
-        })
-        .catch(e => {
-            qrError.textContent = 'Network error: ' + e.message;
-            qrError.style.display = 'block';
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-magic mr-1"></i> Generate QR';
-        });
     });
     </script>
 </body>
