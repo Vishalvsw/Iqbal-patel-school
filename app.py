@@ -14,6 +14,8 @@ app.secret_key = 'your_secret_key'
 DATABASE = 'school.db'
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+# Ensure the upload folder exists every time the app starts
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 PHONEPE_CONFIG_FILE = 'phonepe_config.json'
@@ -117,7 +119,7 @@ def phonepe_generate_upi_qr(amount_paise, merchant_order_id):
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"O-Bearer {token}",
-        "X-MERCHANT-ID": config.get('merchant_id', '')  # Key: add X-MERCHANT-ID
+        "X-MERCHANT-ID": config.get('merchant_id', '') 
     }
 
     try:
@@ -293,7 +295,10 @@ def admin_generate_payment_qr():
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
 
+# ==========================================
+# CRITICAL FIX: THIS MUST BE OUTSIDE THE MAIN BLOCK
+# ==========================================
+initialize_database()
+
 if __name__ == '__main__':
-    if not os.path.exists(DATABASE):
-        initialize_database()
     app.run(debug=True)
