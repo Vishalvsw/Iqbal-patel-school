@@ -218,7 +218,7 @@
             margin-bottom: 14px;
         }
 
-        /* FIXED: Make the Link look like a Button */
+        /* PhonePe Pay Button */
         .btn-phonepe {
             display: inline-flex;
             align-items: center;
@@ -266,29 +266,7 @@
             width: 100%;
             height: auto;
         }
-        .intent-link-btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 10px 24px;
-            background: linear-gradient(135deg, var(--phonepe), var(--phonepe-light));
-            color: #fff;
-            font-weight: 700;
-            border-radius: 8px;
-            text-decoration: none;
-            box-shadow: 0 4px 14px rgba(95,37,159,0.35);
-            transition: transform 0.15s;
-        }
-        .intent-link-btn:hover {
-            color: #fff;
-            text-decoration: none;
-            transform: translateY(-2px);
-        }
-        .order-id-text {
-            margin-top: 10px;
-            font-size: 0.78rem;
-            color: var(--muted);
-        }
-
+        
         /* Divider */
         .payment-divider {
             display: flex;
@@ -615,23 +593,32 @@
                     validateFile('signature', 'Signature');
                 </script>
 
-                <!-- ===== PAYMENT SECTION (FIXED AS A DIRECT LINK) ===== -->
+                <!-- ===== PAYMENT SECTION ===== -->
                 <div class="section-title"><i class="fas fa-rupee-sign"></i> Payment Information</div>
 
                 <div class="payment-box">
                     <h5><i class="fas fa-mobile-alt mr-1"></i> Pay with PhonePe / UPI</h5>
-                    <p>Click below to open your UPI app directly and complete the payment</p>
+                    <p>Click below to generate a secure QR code or open your UPI app directly</p>
 
-                    <!-- FIXED: Using an <a> tag instead of a <button> so mobile devices allow the app to open -->
-                    <a id="payWithPhonePeLink" href="#" class="btn-phonepe">
-                        <i class="fab fa-phonepe"></i> Open UPI App to Pay
-                    </a>
+                    <!-- THIS IS NOW A BUTTON AGAIN -->
+                    <button type="button" id="payWithPhonePeBtn" class="btn-phonepe">
+                        <i class="fab fa-phonepe"></i> Generate Payment QR
+                    </button>
+
+                    <!-- Dynamic QR area (hidden by default) -->
+                    <div id="dynamicQrArea" class="dynamic-qr-area">
+                        <p class="font-weight-bold" style="color:var(--phonepe);margin-bottom:8px;">
+                            <i class="fas fa-qrcode mr-1"></i> Scan with PhonePe / any UPI app
+                        </p>
+                        <img id="dynamicQrImage" class="qr-animated" src="" alt="Payment QR Code">
+                        <br>
+                        <a id="dynamicIntentLink" href="#" class="btn-phonepe" style="margin-top: 12px; display: none;">
+                            <i class="fab fa-phonepe mr-1"></i> Open UPI App to Pay
+                        </a>
+                        <p class="order-id-text">Order ID: <span id="dynamicOrderId"></span></p>
+                    </div>
 
                     <div id="qrErrorBox" class="qr-error" style="display:none;color:red;margin-top:10px;"></div>
-                    
-                    <div style="margin-top: 20px; font-size: 0.85rem; color: #666;">
-                        <i class="fas fa-info-circle"></i> After paying, enter the 12-digit UTR number below to submit the form.
-                    </div>
                 </div>
 
                 <div class="payment-divider">OR</div>
@@ -677,7 +664,12 @@
 
     <script>
     (function() {
-        const payLink = document.getElementById('payWithPhonePeLink');
+        const payBtn = document.getElementById('payWithPhonePeBtn');
+        const qrArea = document.getElementById('dynamicQrArea');
+        const qrImage = document.getElementById('dynamicQrImage');
+        const intentLink = document.getElementById('dynamicIntentLink');
+        const orderIdSpan = document.getElementById('dynamicOrderId');
+        const errorBox = document.getElementById('qrErrorBox');
 
         // CONFIGURATION
         const PAYMENT_AMOUNT_RUPEES = 50;
@@ -692,10 +684,55 @@
             return 'upi://pay?' + params.toString();
         }
 
-        // Set the href instantly when the page loads. 
-        // Because it's an <a> tag, mobile OS allows the app to open naturally.
-        payLink.href = buildUpiIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
-        
+        function buildPhonePeIntent(upiId, name, amount, note) {
+            const params = new URLSearchParams({
+                pa: upiId, pn: name, am: amount.toFixed(2), cu: 'INR', tn: note || 'Payment'
+            });
+            return 'phonepe://upi/pay?' + params.toString();
+        }
+
+        function isMobile() {
+            return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        }
+
+        payBtn.addEventListener('click', function() {
+            errorBox.style.display = 'none';
+            qrArea.classList.remove('show');
+
+            const upiIntent = buildUpiIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
+            const orderRef = 'REG-' + Date.now();
+
+            // FIXED: Mobile redirect happens instantly on click
+            if (isMobile()) {
+                // Try generic UPI first, then PhonePe
+                window.location.href = upiIntent;
+                setTimeout(() => {
+                    window.location.href = buildPhonePeIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
+                }, 500);
+                return; 
+            }
+
+            // DESKTOP FLOW: Generate QR Code
+            payBtn.disabled = true;
+            const originalHtml = payBtn.innerHTML;
+            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating QR...';
+
+            if (window.QRCode && typeof QRCode.toDataURL === 'function') {
+                QRCode.toDataURL(upiIntent, { width: 200, margin: 1, color: { dark: '#5f259f', light: '#ffffff' } }, function(err, url) {
+                    qrImage.src = url || 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiIntent);
+                });
+            } else {
+                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiIntent);
+            }
+
+            intentLink.href = upiIntent;
+            intentLink.style.display = 'inline-flex'; // Show button for desktop users
+            orderIdSpan.textContent = orderRef;
+            qrArea.classList.add('show');
+            
+            payBtn.disabled = false;
+            payBtn.innerHTML = originalHtml;
+        });
     })();
     </script>
 </body>
