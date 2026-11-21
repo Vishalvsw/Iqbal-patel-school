@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, url_for, send_file, jsonify
+from flask import Flask, render_template, request, redirect, flash, url_for, send_file, jsonify, session
 import sqlite3
 import os
 from werkzeug.utils import secure_filename
@@ -7,9 +7,11 @@ import io
 import requests
 import uuid
 import json
+from functools import wraps
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+# 🔐 CHANGE THIS SECRET KEY TO ANY RANDOM STRING IN PRODUCTION
+app.secret_key = 'iqbal_patel_super_secret_key_2027_vsw'
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATABASE = os.path.join(BASE_DIR, 'school.db')
@@ -58,12 +60,23 @@ def initialize_database():
                 payment_utr TEXT UNIQUE NOT NULL,
                 hall_ticket TEXT UNIQUE,
                 verified BOOLEAN DEFAULT FALSE,
-                exam_center TEXT NOT NULL
+                exam_center TEXT NOT NULL,
+                admission_phase TEXT NOT NULL
             );
         ''')
         print("Database initialized successfully!")
 
-# ========== PhonePe Configuration ==========
+# ========== Admin Login Decorator ==========
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'admin_logged_in' not in session:
+            flash('Please log in to access this page.', 'danger')
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# ========== PhonePe Configuration (Kept for future use) ==========
 def load_phonepe_config():
     if os.path.exists(PHONEPE_CONFIG_FILE):
         with open(PHONEPE_CONFIG_FILE, 'r') as f:
@@ -75,7 +88,6 @@ def save_phonepe_config_to_file(config):
         json.dump(config, f)
 
 def get_phonepe_access_token(client_id, client_secret, client_version, env='sandbox'):
-    """Get O-Bearer Token. Production and sandbox URLs differ."""
     if env == 'production':
         url = "https://api.phonepe.com/apis/identity-manager/v1/oauth/token"
     else:
@@ -93,7 +105,6 @@ def get_phonepe_access_token(client_id, client_secret, client_version, env='sand
     return resp.json().get('access_token')
 
 def phonepe_generate_upi_qr(amount_paise, merchant_order_id):
-    """Call PhonePe UPI QR API, return qrData and intentUrl."""
     config = load_phonepe_config()
     if not config.get('client_id'):
         return {"success": False, "error": "PhonePe not configured. Please save settings first."}
@@ -177,18 +188,19 @@ def register_student():
                 INSERT INTO students (
                     name, father_name, dob, class, gender, academic_year, aadhar, village, taluka, district, pin,
                     religion, caste, nationality, mother_tongue, medium, residential_address, phone1, phone2,
-                    photo, signature, payment_utr, exam_center
+                    photo, signature, payment_utr, exam_center, admission_phase
                 ) VALUES (
                     :name, :father_name, :dob, :class, :gender, :academic_year, :aadhar, :village, :taluka, :district, :pin,
                     :religion, :caste, :nationality, :mother_tongue, :medium, :residential_address, :phone1, :phone2,
-                    :photo, :signature, :payment_utr, :exam_center
+                    :photo, :signature, :payment_utr, :exam_center, :admission_phase
                 )
             """, {
                 **student_data,
                 'photo': photo_path,
                 'signature': signature_path,
                 'payment_utr': student_data.get('payment_utr'),
-                'exam_center': student_data.get('exam_center')
+                'exam_center': student_data.get('exam_center'),
+                'admission_phase': student_data.get('admission_phase', 'Phase_1')
             })
             student_id = cursor.lastrowid
             hall_ticket = f"HT-{student_id:06}"
@@ -208,16 +220,41 @@ def view_hall_ticket(student_id):
         student = conn.execute("SELECT * FROM students WHERE id = ?", (student_id,)).fetchone()
         if not student:
             flash("Student not found.", "danger")
-            return redirect(url_for('admin_dashboard'))
+            return redirect(url_for('register'))
     return render_template('hallticket.html', student=student)
 
+# ========== Admin Routes (Secured) ==========
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        # 🔐 CHANGE YOUR USERNAME AND PASSWORD HERE
+        if username == 'admin' and password == 'iqbal2027':
+            session['admin_logged_in'] = True
+            flash('Logged in successfully.', 'success')
+            return redirect(url_for('admin_dashboard'))
+        else:
+            flash('Invalid credentials. Please try again.', 'danger')
+            
+    return render_template('admin_login.html')
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('admin_logged_in', None)
+    flash('Logged out successfully.', 'success')
+    return redirect(url_for('admin_login'))
+
 @app.route('/admin')
+@login_required
 def admin_dashboard():
     with get_db_connection() as conn:
         students = conn.execute("SELECT * FROM students").fetchall()
     return render_template('admin.html', students=students)
 
 @app.route('/admin/verify/<int:student_id>', methods=['POST'])
+@login_required
 def verify_student(student_id):
     try:
         with get_db_connection() as conn:
@@ -229,6 +266,7 @@ def verify_student(student_id):
     return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin/generate_hall_ticket/<int:student_id>', methods=['POST'])
+@login_required
 def generate_hall_ticket(student_id):
     try:
         with get_db_connection() as conn:
@@ -245,7 +283,8 @@ def generate_hall_ticket(student_id):
         flash(f"An error occurred: {e}", "danger")
     return redirect(url_for('admin_dashboard'))
 
-@app.route('/download_csv', methods=['GET'])
+@app.route('/admin/download_csv', methods=['GET'])
+@login_required
 def download_csv():
     try:
         with get_db_connection() as conn:
@@ -275,8 +314,14 @@ def download_csv():
         flash(f"An error occurred while generating CSV: {e}", "danger")
         return redirect(url_for('admin_dashboard'))
 
-# ========== PhonePe Routes ==========
+@app.route('/admin/payment_info')
+@login_required
+def payment_info():
+    return render_template('payment_info.html')
+
+# ========== PhonePe Routes (Kept for future) ==========
 @app.route('/admin/save_phonepe_config', methods=['POST'])
+@login_required
 def save_phonepe_config():
     try:
         data = request.get_json()
@@ -286,6 +331,7 @@ def save_phonepe_config():
         return jsonify({"success": False, "error": str(e)})
 
 @app.route('/admin/generate_payment_qr', methods=['POST'])
+@login_required
 def admin_generate_payment_qr():
     try:
         req = request.get_json() or {}
@@ -297,7 +343,7 @@ def admin_generate_payment_qr():
         return jsonify({"success": False, "error": str(e)})
 
 # ==========================================
-# CRITICAL FIX: THIS MUST BE OUTSIDE THE MAIN BLOCK
+# CRITICAL: INITIALIZE DATABASE ON STARTUP
 # ==========================================
 initialize_database()
 
