@@ -218,14 +218,14 @@
             margin-bottom: 14px;
         }
 
-        /* PhonePe Pay Button */
+        /* FIXED: Make the Link look like a Button */
         .btn-phonepe {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             background: linear-gradient(135deg, var(--phonepe) 0%, var(--phonepe-light) 100%);
-            color: #fff;
+            color: #fff !important;
             font-weight: 700;
             font-size: clamp(0.9rem, 2.6vw, 1rem);
             padding: 12px 28px;
@@ -237,16 +237,11 @@
             width: 100%;
             max-width: 320px;
             margin: 0 auto;
+            text-decoration: none !important;
         }
         .btn-phonepe:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 22px rgba(95,37,159,0.5);
-            color: #fff;
-        }
-        .btn-phonepe:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
         }
 
         /* Dynamic QR Display */
@@ -582,7 +577,7 @@
                     </div>
                 </div>
 
-                <!-- UPLOADS (UPDATED TO 5MB LIMIT) -->
+                <!-- UPLOADS -->
                 <div class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload Documents</div>
                 <div class="form-row">
                     <div class="form-group col-12 col-md-6">
@@ -603,13 +598,13 @@
                     </div>
                 </div>
 
-                <!-- FILE VALIDATION 5MB -->
+                <!-- FILE VALIDATION -->
                 <script>
                     function validateFile(inputId, label) {
                         var input = document.getElementById(inputId);
                         input.addEventListener('change', function () {
                             if (this.files && this.files[0]) {
-                                if (this.files[0].size > 5 * 1024 * 1024) { // 5MB in bytes
+                                if (this.files[0].size > 5 * 1024 * 1024) {
                                     alert(label + ' size must be less than 5MB');
                                     this.value = '';
                                 }
@@ -620,32 +615,23 @@
                     validateFile('signature', 'Signature');
                 </script>
 
-                <!-- ===== PAYMENT SECTION (FIXED MOBILE REDIRECT) ===== -->
+                <!-- ===== PAYMENT SECTION (FIXED AS A DIRECT LINK) ===== -->
                 <div class="section-title"><i class="fas fa-rupee-sign"></i> Payment Information</div>
 
                 <div class="payment-box">
                     <h5><i class="fas fa-mobile-alt mr-1"></i> Pay with PhonePe / UPI</h5>
-                    <p>Click below to generate a secure QR code or open your UPI app directly</p>
+                    <p>Click below to open your UPI app directly and complete the payment</p>
 
-                    <button type="button" id="payWithPhonePeBtn" class="btn-phonepe">
-                        <i class="fab fa-phonepe"></i> Generate Payment QR
-                    </button>
+                    <!-- FIXED: Using an <a> tag instead of a <button> so mobile devices allow the app to open -->
+                    <a id="payWithPhonePeLink" href="#" class="btn-phonepe">
+                        <i class="fab fa-phonepe"></i> Open UPI App to Pay
+                    </a>
 
-                    <!-- Dynamic QR area (hidden by default) -->
-                    <div id="dynamicQrArea" class="dynamic-qr-area">
-                        <p class="font-weight-bold" style="color:var(--phonepe);margin-bottom:8px;">
-                            <i class="fas fa-qrcode mr-1"></i> Scan with PhonePe / any UPI app
-                        </p>
-                        <img id="dynamicQrImage" class="qr-animated" src="" alt="Payment QR Code">
-                        <br>
-                        <a id="dynamicIntentLink" href="#" class="intent-link-btn">
-                            <i class="fab fa-phonepe mr-1"></i> Open UPI App to Pay
-                        </a>
-                        <p class="order-id-text">Order ID: <span id="dynamicOrderId"></span></p>
-                    </div>
-
-                    <!-- Error display -->
                     <div id="qrErrorBox" class="qr-error" style="display:none;color:red;margin-top:10px;"></div>
+                    
+                    <div style="margin-top: 20px; font-size: 0.85rem; color: #666;">
+                        <i class="fas fa-info-circle"></i> After paying, enter the 12-digit UTR number below to submit the form.
+                    </div>
                 </div>
 
                 <div class="payment-divider">OR</div>
@@ -687,22 +673,13 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.5/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-    <!-- QR Code library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
     <script>
     (function() {
-        const payBtn = document.getElementById('payWithPhonePeBtn');
-        const qrArea = document.getElementById('dynamicQrArea');
-        const qrImage = document.getElementById('dynamicQrImage');
-        const intentLink = document.getElementById('dynamicIntentLink');
-        const orderIdSpan = document.getElementById('dynamicOrderId');
-        const errorBox = document.getElementById('qrErrorBox');
+        const payLink = document.getElementById('payWithPhonePeLink');
 
-        // ============================================================
-        // ⚙️ CONFIGURATION
-        // ============================================================
+        // CONFIGURATION
         const PAYMENT_AMOUNT_RUPEES = 50;
         const ADMIN_UPI_ID = '8971056786-4@ybl';
         const ADMIN_NAME = 'IQBAL PATEL SCHOOL And COLLEGE';
@@ -715,60 +692,10 @@
             return 'upi://pay?' + params.toString();
         }
 
-        function buildPhonePeIntent(upiId, name, amount, note) {
-            const params = new URLSearchParams({
-                pa: upiId, pn: name, am: amount.toFixed(2), cu: 'INR', tn: note || 'Payment'
-            });
-            return 'phonepe://upi/pay?' + params.toString();
-        }
-
-        function isMobile() {
-            return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        }
-
-        // ============================================================
-        // FIXED MOBILE REDIRECT: Instant launch on first click
-        // ============================================================
-        payBtn.addEventListener('click', function() {
-            errorBox.style.display = 'none';
-            qrArea.classList.remove('show');
-
-            const upiIntent = buildUpiIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
-            const orderRef = 'REG-' + Date.now();
-
-            // If Mobile: Auto-redirect immediately without showing QR to prevent double-click
-            if (isMobile()) {
-                const isAndroid = /Android/i.test(navigator.userAgent);
-                if (isAndroid) {
-                    window.location.href = buildPhonePeIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
-                    // Fallback in case app is not installed
-                    setTimeout(() => { window.location.href = upiIntent; }, 400);
-                } else {
-                    window.location.href = upiIntent;
-                }
-                return; // Stop here, don't load QR code
-            }
-
-            // Desktop flow: Show the QR code
-            payBtn.disabled = true;
-            const originalHtml = payBtn.innerHTML;
-            payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating QR...';
-
-            if (window.QRCode && typeof QRCode.toDataURL === 'function') {
-                QRCode.toDataURL(upiIntent, { width: 200, margin: 1, color: { dark: '#5f259f', light: '#ffffff' } }, function(err, url) {
-                    qrImage.src = url || 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiIntent);
-                });
-            } else {
-                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiIntent);
-            }
-
-            intentLink.href = upiIntent;
-            orderIdSpan.textContent = orderRef;
-            qrArea.classList.add('show');
-            
-            payBtn.disabled = false;
-            payBtn.innerHTML = originalHtml;
-        });
+        // Set the href instantly when the page loads. 
+        // Because it's an <a> tag, mobile OS allows the app to open naturally.
+        payLink.href = buildUpiIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
+        
     })();
     </script>
 </body>
