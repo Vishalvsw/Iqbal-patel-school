@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta name="theme-color" content="#0a2b4e">
-    <title>Student Registration | IQBAL PATEL SCHOOL</title>
+    <title>Student Registration | IQBAL PATEL SCHOOL and PU COLLEGE</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -12,7 +12,6 @@
             --primary: #0a2b4e;
             --primary-light: #1c4f8a;
             --accent: #007bff;
-            --accent-hover: #0056b3;
             --gold: #ffc107;
             --bg: #f0f4f8;
             --card-bg: #ffffff;
@@ -20,7 +19,6 @@
             --muted: #6c757d;
             --border: #e2e8f0;
             --radius: 12px;
-            --shadow: 0 4px 20px rgba(10, 43, 78, 0.08);
             --shadow-lg: 0 10px 40px rgba(10, 43, 78, 0.15);
             --phonepe: #5f259f;
             --phonepe-light: #7b3fb5;
@@ -46,14 +44,6 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-        .site-header::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
-            pointer-events: none;
         }
         .header-logo {
             width: clamp(64px, 12vw, 96px);
@@ -258,7 +248,6 @@
             cursor: not-allowed;
             transform: none;
         }
-        .btn-phonepe i { font-size: 1.1em; }
 
         /* Dynamic QR Display */
         .dynamic-qr-area {
@@ -276,13 +265,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes qrPulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0.35); }
-            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(95,37,159,0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(95,37,159,0); }
-        }
         .qr-animated {
-            animation: qrPulse 2s infinite;
             border-radius: 10px;
             max-width: 200px;
             width: 100%;
@@ -310,18 +293,6 @@
             font-size: 0.78rem;
             color: var(--muted);
         }
-        .qr-error {
-            display: none;
-            margin-top: 12px;
-            padding: 10px 14px;
-            background: #f8d7da;
-            border-left: 4px solid #dc3545;
-            border-radius: 8px;
-            color: #721c24;
-            font-size: 0.85rem;
-            text-align: left;
-        }
-        .qr-error.show { display: block; }
 
         /* Divider */
         .payment-divider {
@@ -360,15 +331,6 @@
             box-shadow: 0 8px 22px rgba(0,123,255,0.4);
             color: #fff;
         }
-        .btn-submit:active { transform: translateY(0); }
-
-        /* ===== FLASH MESSAGES ===== */
-        .alert-success {
-            border-radius: 10px;
-            border-left: 5px solid #28a745;
-            margin-top: 20px;
-            font-size: clamp(0.85rem, 2.3vw, 0.95rem);
-        }
 
         /* ===== FOOTER ===== */
         .site-footer {
@@ -380,7 +342,6 @@
             font-size: clamp(0.78rem, 2.2vw, 0.9rem);
         }
         .site-footer a { color: #4fc3f7; text-decoration: none; font-weight: 600; }
-        .site-footer a:hover { text-decoration: underline; }
 
         /* ===== RESPONSIVE TWEAKS ===== */
         @media (max-width: 767.98px) {
@@ -397,11 +358,9 @@
             .btn-phonepe { font-size: 0.9rem; padding: 11px 20px; }
         }
 
-        /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #b0c4de; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
     </style>
 </head>
 <body>
@@ -411,13 +370,14 @@
         <img src="static/img/logo.jpg" alt="IQBAL PATEL SCHOOL Logo" class="header-logo">
         <h6>ಶಿಕ್ಷಣದಲ್ಲಿ ಹಿಂದುಳಿದ ಕಲ್ಯಾಣ ಕರ್ನಾಟಕದ ಅಭಿವೃದ್ಧಿಗಾಗಿ ಆಯೋಜಿಸಿರುವ</h6>
         <h6>ವಿದ್ಯಾರ್ಥಿಯ ಸರ್ವೋತಮುಖ ಬೆಳವಣಿಗೆಗಾಗಿ ಹಿಂದುಳಿದ ಹಾಗೂ ಬಡ ಕುಟುಂಬದ ವಿದ್ಯಾರ್ಥಿಗಳಿಗಾಗಿ ಉಚಿತ ವಸತಿ ಶಾಲೆಯ ಪ್ರವೇಶ ಅರ್ಜಿ 2027-28</h6>
-        <h2 class="school-title">IQBAL PATEL PRIMARY &amp; HIGH SCHOOL</h2>
+        <h2 class="school-title">IQBAL PATEL PRIMARY &amp; HIGH SCHOOL And COLLEGE</h2>
         <h3 class="school-subtitle">Residential &amp; Non Residential SHAIK MOINUDDIN PU COLLEGE</h3>
         <h6>ಕೊಂಗಲಿ ರಸ್ತೆ, ಹುಲ್ಸೂರ್ - 585 416 ತಾ. ಹುಲ್ಸೂರ್ ಜಿಲ್ಲೆ ಬೀದರ್</h6>
-        <div><span class="exam-badge"><i class="fas fa-graduation-cap"></i> Free Hostel Entrance Exam 2027-28</span></div>
+        <div><span class="exam-badge"><i class="fas fa-graduation-cap"></i> Scholership Entrance Exam for admission 2027-28</span></div>
         <div class="marquee-wrap">
             <marquee behavior="scroll" direction="left" scrollamount="5">
-                Admissions are open for 2027! | ನಿಮ್ಮ ಭವಿಷ್ಯವನ್ನು ನಿರ್ಧರಿಸಿ ಇಂದು ಪ್ರವೇಶ ಪರೀಕ್ಷೆಗಾಗಿ ನೋಂದಣಿ ಮಾಡಿ! | Parent-teacher meeting scheduled for Jan 10th.
+                Admissions are open for 2027! | Apply now for 7th, 8th, 9th, 10th, and 1st PUC Science |
+                Ensure you have your documents ready for upload | Payment can be made via PhonePe or UPI | For assistance, contact us at +91-1234567890
             </marquee>
         </div>
     </header>
@@ -498,16 +458,13 @@
                 <div class="form-row">
                     <div class="form-group col-12">
                         <label for="previous_school">Previous School Name And Address <span class="required-star">*</span></label>
+                        <textarea class="form-control" id="previous_school" name="previous_school" required></textarea>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-12 col-md-6">
                         <label for="class">Last year Class <span class="required-star">*</span></label>
                         <input type="text" class="form-control" id="class" name="class" required>
-                        
-
-                        
-                        </select>
                     </div>
                     <div class="form-group col-12 col-md-6">
                         <label for="academic_year">Academic Year <span class="required-star">*</span></label>
@@ -564,7 +521,6 @@
                             <option value="">Select Medium</option>
                             <option value="Kannada">Kannada</option>
                             <option value="English">English</option>
-
                         </select>
                     </div>
                 </div>
@@ -594,23 +550,17 @@
                             <option value="9">9th Grade</option>
                             <option value="10">10th Grade</option>
                             <option value="1st_PUC_Science">1st PUC Science</option>
- 
                         </select>
                     </div>
-
-                    <!-- phase wise 1 , 2 dropdown list -->
+                    
                     <div class="form-group col-12 col-md-6">
                         <label for="admission_phase">Admission Phase <span class="required-star">*</span></label>
                         <select class="form-control" id="admission_phase" name="admission_phase" required>
                             <option value="">Select admission Phase</option>
                             <option value="Phase_1">Phase 1 -- 07 Feb 2027 (Sun)</option>
-                            <option value="Phase_2">Phase 2 -- 06 Apr 2027 (Tue)  </option>
+                            <option value="Phase_2">Phase 2 -- 06 Apr 2027 (Tue)</option>
                         </select>
-
                     </div>
-
-
-
 
                     <div class="form-group col-12 col-md-6">
                         <label for="admission_type">Admission Type <span class="required-star">*</span></label>
@@ -632,34 +582,35 @@
                     </div>
                 </div>
 
-                <!-- UPLOADS -->
+                <!-- UPLOADS (UPDATED TO 5MB LIMIT) -->
                 <div class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload Documents</div>
                 <div class="form-row">
                     <div class="form-group col-12 col-md-6">
-                        <label for="photo">Passport Photo (Max size: 120KB) <span class="required-star">*</span></label>
+                        <label for="photo">Passport Photo <span class="required-star">*</span></label>
                         <div class="upload-box">
                             <i class="fas fa-user-circle"></i>
                             <input type="file" class="form-control-file" id="photo" name="photo" accept="image/*" required>
-                   e         <small class="d-block mt-1">PNG, JPG, JPEG only</small>
+                             <small class="d-block mt-1">PNG, JPG, JPEG only (Max 5MB)</small>
                         </div>
                     </div>
                     <div class="form-group col-12 col-md-6">
-                        <label for="signature">Upload Signature (Max size: 120KB) <span class="required-star">*</span></label>
+                        <label for="signature">Upload Signature <span class="required-star">*</span></label>
                         <div class="upload-box">
                             <i class="fas fa-signature"></i>
                             <input type="file" class="form-control-file" id="signature" name="signature" accept="image/*" required>
-                            <small class="d-block mt-1">PNG, JPG, JPEG only</small>
+                            <small class="d-block mt-1">PNG, JPG, JPEG only (Max 5MB)</small>
                         </div>
                     </div>
                 </div>
 
+                <!-- FILE VALIDATION 5MB -->
                 <script>
                     function validateFile(inputId, label) {
                         var input = document.getElementById(inputId);
                         input.addEventListener('change', function () {
                             if (this.files && this.files[0]) {
-                                if (this.files[0].size > 120 * 1024) {
-                                    alert(label + ' size must be less than 120KB');
+                                if (this.files[0].size > 5 * 1024 * 1024) { // 5MB in bytes
+                                    alert(label + ' size must be less than 5MB');
                                     this.value = '';
                                 }
                             }
@@ -669,7 +620,7 @@
                     validateFile('signature', 'Signature');
                 </script>
 
-                <!-- ===== PAYMENT SECTION (UPDATED WITH UPI DEEP LINK) ===== -->
+                <!-- ===== PAYMENT SECTION (FIXED MOBILE REDIRECT) ===== -->
                 <div class="section-title"><i class="fas fa-rupee-sign"></i> Payment Information</div>
 
                 <div class="payment-box">
@@ -694,7 +645,7 @@
                     </div>
 
                     <!-- Error display -->
-                    <div id="qrErrorBox" class="qr-error"></div>
+                    <div id="qrErrorBox" class="qr-error" style="display:none;color:red;margin-top:10px;"></div>
                 </div>
 
                 <div class="payment-divider">OR</div>
@@ -729,7 +680,7 @@
     </main>
 
     <footer class="site-footer">
-        <p class="mb-1">&copy; 2026-27 IQBAL PATEL PRIMARY &amp; HIGH SCHOOL. All Rights Reserved.</p>
+        <p class="mb-1">&copy; 2026-27 IQBAL PATEL PRIMARY &amp; HIGH SCHOOL And COLLEGE. All Rights Reserved.</p>
         <p class="mb-0">Developed by <a href="https://www.vswdatasolutions.in" target="_blank">VSWA Data Solutions</a></p>
     </footer>
 
@@ -737,10 +688,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.5/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- QR Code library (local rendering, no external API call) -->
+    <!-- QR Code library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
-    <!-- ===== PhonePe / UPI Dynamic QR Script ===== -->
     <script>
     (function() {
         const payBtn = document.getElementById('payWithPhonePeBtn');
@@ -751,168 +701,74 @@
         const errorBox = document.getElementById('qrErrorBox');
 
         // ============================================================
-        // ⚙️ CONFIGURATION — CHANGE THESE VALUES
+        // ⚙️ CONFIGURATION
         // ============================================================
-        // Payment amount in rupees
         const PAYMENT_AMOUNT_RUPEES = 50;
-
-        // ⚠️ ADMIN's PhonePe UPI ID — replace with the school's actual UPI ID
-        // Examples: '9876543210@ybl' (PhonePe), 'school@okaxis', 'school@okhdfcbank'
         const ADMIN_UPI_ID = '8971056786-4@ybl';
-
-        // Payee name shown in the UPI app
-        const ADMIN_NAME = 'IQBAL PATEL SCHOOL';
-
-        // Payment note/remark
+        const ADMIN_NAME = 'IQBAL PATEL SCHOOL And COLLEGE';
         const PAYMENT_NOTE = 'Student Registration Fee';
 
-        // ============================================================
-
-        /**
-         * Build a standard UPI deep link that works with PhonePe, GPay, Paytm, etc.
-         * Format: upi://pay?pa=<vpa>&pn=<name>&am=<amount>&cu=INR&tn=<note>
-         */
         function buildUpiIntent(upiId, name, amount, note) {
             const params = new URLSearchParams({
-                pa: upiId,
-                pn: name,
-                am: amount.toFixed(2),
-                cu: 'INR',
-                tn: note || 'Payment'
+                pa: upiId, pn: name, am: amount.toFixed(2), cu: 'INR', tn: note || 'Payment'
             });
             return 'upi://pay?' + params.toString();
         }
 
-        /**
-         * Build a PhonePe-specific deep link (Android only — opens PhonePe directly
-         * without the app-chooser dialog).
-         */
         function buildPhonePeIntent(upiId, name, amount, note) {
             const params = new URLSearchParams({
-                pa: upiId,
-                pn: name,
-                am: amount.toFixed(2),
-                cu: 'INR',
-                tn: note || 'Payment'
+                pa: upiId, pn: name, am: amount.toFixed(2), cu: 'INR', tn: note || 'Payment'
             });
             return 'phonepe://upi/pay?' + params.toString();
         }
 
-        /**
-         * Detect if the user is on a mobile device (Android/iOS).
-         */
         function isMobile() {
             return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
         }
 
+        // ============================================================
+        // FIXED MOBILE REDIRECT: Instant launch on first click
+        // ============================================================
         payBtn.addEventListener('click', function() {
-            // Reset UI
-            errorBox.classList.remove('show');
-            errorBox.textContent = '';
+            errorBox.style.display = 'none';
             qrArea.classList.remove('show');
 
-            // Build the UPI intent link locally (no backend needed for this part)
-            const upiIntent = buildUpiIntent(
-                ADMIN_UPI_ID,
-                ADMIN_NAME,
-                PAYMENT_AMOUNT_RUPEES,
-                PAYMENT_NOTE
-            );
-
-            // Generate a unique order reference for display
+            const upiIntent = buildUpiIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
             const orderRef = 'REG-' + Date.now();
 
-            // Loading state
+            // If Mobile: Auto-redirect immediately without showing QR to prevent double-click
+            if (isMobile()) {
+                const isAndroid = /Android/i.test(navigator.userAgent);
+                if (isAndroid) {
+                    window.location.href = buildPhonePeIntent(ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE);
+                    // Fallback in case app is not installed
+                    setTimeout(() => { window.location.href = upiIntent; }, 400);
+                } else {
+                    window.location.href = upiIntent;
+                }
+                return; // Stop here, don't load QR code
+            }
+
+            // Desktop flow: Show the QR code
             payBtn.disabled = true;
             const originalHtml = payBtn.innerHTML;
             payBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating QR...';
 
-            // Try the backend first (for order tracking / logging), but fall back
-            // to pure frontend UPI intent if the backend is unavailable.
-            fetch('/admin/generate_payment_qr', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    amount: Math.round(PAYMENT_AMOUNT_RUPEES * 50),
-                    upi_id: ADMIN_UPI_ID,
-                    note: PAYMENT_NOTE
-                })
-            })
-            .then(function(res) {
-                if (!res.ok) throw new Error('Backend responded with ' + res.status);
-                return res.json();
-            })
-            .then(function(data) {
-                // Prefer backend-provided intentUrl if available; otherwise use our local one
-                const finalIntent = data.intentUrl || upiIntent;
-                const finalOrderId = data.orderId || orderRef;
-
-                renderQr(upiIntent, finalIntent, finalOrderId);
-            })
-            .catch(function(err) {
-                // Backend failed — still show QR using the locally-built UPI intent.
-                // This ensures the payment flow never breaks even if the server is down.
-                console.warn('Backend QR generation failed, using local UPI intent:', err.message);
-                renderQr(upiIntent, upiIntent, orderRef);
-            })
-            .finally(function() {
-                payBtn.disabled = false;
-                payBtn.innerHTML = originalHtml;
-            });
-        });
-
-        /**
-         * Render the QR code + intent link + order ID in the UI.
-         */
-        function renderQr(qrData, intentUrl, orderId) {
-            // Use local qrcode.js library to render QR (no external API dependency)
             if (window.QRCode && typeof QRCode.toDataURL === 'function') {
-                QRCode.toDataURL(qrData, {
-                    width: 200,
-                    margin: 1,
-                    color: { dark: '#5f259f', light: '#ffffff' }
-                }, function(err, url) {
-                    if (err) {
-                        // Fallback to external QR service
-                        qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
-                                      + encodeURIComponent(qrData);
-                    } else {
-                        qrImage.src = url;
-                    }
+                QRCode.toDataURL(upiIntent, { width: 200, margin: 1, color: { dark: '#5f259f', light: '#ffffff' } }, function(err, url) {
+                    qrImage.src = url || 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiIntent);
                 });
             } else {
-                // qrcode.js not loaded — fallback to external API
-                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='
-                              + encodeURIComponent(qrData);
+                qrImage.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(upiIntent);
             }
 
-            // Set the intent link
-            intentLink.href = intentUrl;
-            orderIdSpan.textContent = orderId;
+            intentLink.href = upiIntent;
+            orderIdSpan.textContent = orderRef;
             qrArea.classList.add('show');
-
-            // On mobile: auto-open the UPI app after a short delay
-            // (gives user a moment to see the QR before the app opens)
-            if (isMobile() && intentUrl && intentUrl !== '#') {
-                setTimeout(function() {
-                    // Try PhonePe-specific scheme first on Android, fall back to generic upi://
-                    const isAndroid = /Android/i.test(navigator.userAgent);
-                    if (isAndroid) {
-                        const phonepeLink = buildPhonePeIntent(
-                            ADMIN_UPI_ID, ADMIN_NAME, PAYMENT_AMOUNT_RUPEES, PAYMENT_NOTE
-                        );
-                        // Attempt PhonePe, fall back to generic UPI after 1.5s if app not installed
-                        window.location.href = phonepeLink;
-                        setTimeout(function() {
-                            window.location.href = intentUrl;
-                        }, 1500);
-                    } else {
-                        // iOS: use universal upi:// scheme
-                        window.location.href = intentUrl;
-                    }
-                }, 800);
-            }
-        }
+            
+            payBtn.disabled = false;
+            payBtn.innerHTML = originalHtml;
+        });
     })();
     </script>
 </body>
