@@ -206,8 +206,19 @@
                 <h4><i class="fas fa-ticket-alt mr-2"></i>Hall Ticket</h4>
                 <div class="exam-date">
                     <p class="mb-1">A/c &amp; Non-A/c Hostel for Boys and Girls</p>
-                    <p class="mb-0"><strong>Phase 1:</strong> 07 Feb 2027 (Sun) &nbsp;|&nbsp; <strong>Phase 2:</strong> 06 Apr 2027 (Tue)</p>
-                    <p class="mb-0">Batch: <strong>11:30 AM – 01:30 PM</strong> &amp; <strong>02:30 PM – 04:30 PM</strong></p>
+                    
+                    <!-- DYNAMIC PHASE LOGIC -->
+                    <div class="alert alert-primary py-2 mt-2" style="font-weight: 700; font-size: 1.1em; background-color: #e3f2fd; color: #0056b3; border-color: #b3d7ff;">
+                        {% if student.admission_phase == 'Phase_1' %}
+                            <i class="fas fa-calendar-alt mr-2"></i> Phase 1 Exam Date: 07 Feb 2027 (Sunday)
+                        {% elif student.admission_phase == 'Phase_2' %}
+                            <i class="fas fa-calendar-alt mr-2"></i> Phase 2 Exam Date: 06 Apr 2027 (Tuesday)
+                        {% else %}
+                            <i class="fas fa-calendar-alt mr-2"></i> Exam Date: {{ student.admission_phase }}
+                        {% endif %}
+                    </div>
+
+                    <p class="mb-0 mt-2">Batch: <strong>11:30 AM – 01:30 PM</strong> &amp; <strong>02:30 PM – 04:30 PM</strong></p>
                 </div>
             </div>
 
