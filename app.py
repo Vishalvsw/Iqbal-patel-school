@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, redirect, flash, url_for, send_file, jsonify, session
-import sqlite3
 import os
 from werkzeug.utils import secure_filename
 import csv
@@ -8,34 +7,55 @@ import requests
 import uuid
 import json
 from functools import wraps
+import psycopg2
+from psycopg2.extras import DictCursor
+from urllib.parse import urlparse
 
 app = Flask(__name__)
-# 🔐 CHANGE THIS SECRET KEY TO ANY RANDOM STRING IN PRODUCTION
 app.secret_key = 'iqbal_patel_super_secret_key_2027_vsw'
 
+# ==========================================
+# 📁 FILE UPLOAD CONFIGURATION
+# ==========================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE = os.path.join(BASE_DIR, 'school.db')
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
-
-# Ensure the upload folder exists every time the app starts
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-PHONEPE_CONFIG_FILE = 'phonepe_config.json'
+# ==========================================
+# 🗄️ DATABASE CONFIGURATION (POSTGRESQL)
+# ==========================================
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
+    if not DATABASE_URL:
+        raise Exception("DATABASE_URL is missing! Please add PostgreSQL on Render.")
+    
+    if DATABASE_URL.startswith("postgres://"):
+        db_url = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    else:
+        db_url = DATABASE_URL
+        
+    url = urlparse(db_url)
+    conn = psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
     return conn
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def initialize_database():
-    with get_db_connection() as conn:
-        conn.executescript('''  
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''  
             CREATE TABLE IF NOT EXISTS students (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id SERIAL PRIMARY KEY,
                 name TEXT NOT NULL,
                 father_name TEXT NOT NULL,
                 dob TEXT NOT NULL,
@@ -64,7 +84,12 @@ def initialize_database():
                 admission_phase TEXT NOT NULL
             );
         ''')
-        print("Database initialized successfully!")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        print("PostgreSQL Database initialized successfully!")
+    except Exception as e:
+        print(f"Database initialization error: {e}")
 
 # ========== Admin Login Decorator ==========
 def login_required(f):
@@ -76,15 +101,15 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ========== PhonePe Configuration (Kept for future use) ==========
+# ========== PhonePe Configuration ==========
 def load_phonepe_config():
-    if os.path.exists(PHONEPE_CONFIG_FILE):
-        with open(PHONEPE_CONFIG_FILE, 'r') as f:
+    if os.path.exists('phonepe_config.json'):
+        with open('phonepe_config.json', 'r') as f:
             return json.load(f)
     return {}
 
 def save_phonepe_config_to_file(config):
-    with open(PHONEPE_CONFIG_FILE, 'w') as f:
+    with open('phonepe_config.json', 'w') as f:
         json.dump(config, f)
 
 def get_phonepe_access_token(client_id, client_secret, client_version, env='sandbox'):
@@ -107,7 +132,7 @@ def get_phonepe_access_token(client_id, client_secret, client_version, env='sand
 def phonepe_generate_upi_qr(amount_paise, merchant_order_id):
     config = load_phonepe_config()
     if not config.get('client_id'):
-        return {"success": False, "error": "PhonePe not configured. Please save settings first."}
+        return {"success": False, "error": "PhonePe not configured."}
 
     env = config.get('env', 'sandbox')
     base = "https://api.phonepe.com/apis/pg" if env == 'production' else "https://api-preprod.phonepe.com/apis/pg-sandbox"
@@ -179,58 +204,77 @@ def register_student():
 
         photo.save(photo_path)
         signature.save(signature_path)
-        photo_path = photo_path.replace("\\", "/")
-        signature_path = signature_path.replace("\\", "/")
+        
+        # Save relative paths for the database
+        photo_db_path = f"static/uploads/{photo_filename}"
+        signature_db_path = f"static/uploads/{signature_filename}"
 
-        with get_db_connection() as conn:
-            cursor = conn.cursor()
-            cursor.execute(""" 
-                INSERT INTO students (
-                    name, father_name, dob, class, gender, academic_year, aadhar, village, taluka, district, pin,
-                    religion, caste, nationality, mother_tongue, medium, residential_address, phone1, phone2,
-                    photo, signature, payment_utr, exam_center, admission_phase
-                ) VALUES (
-                    :name, :father_name, :dob, :class, :gender, :academic_year, :aadhar, :village, :taluka, :district, :pin,
-                    :religion, :caste, :nationality, :mother_tongue, :medium, :residential_address, :phone1, :phone2,
-                    :photo, :signature, :payment_utr, :exam_center, :admission_phase
-                )
-            """, {
-                **student_data,
-                'photo': photo_path,
-                'signature': signature_path,
-                'payment_utr': student_data.get('payment_utr'),
-                'exam_center': student_data.get('exam_center'),
-                'admission_phase': student_data.get('admission_phase', 'Phase_1')
-            })
-            student_id = cursor.lastrowid
-            hall_ticket = f"HT-{student_id:06}"
-            cursor.execute("UPDATE students SET hall_ticket = ? WHERE id = ?", (hall_ticket, student_id))
-            conn.commit()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=DictCursor)
+        
+        cursor.execute(""" 
+            INSERT INTO students (
+                name, father_name, dob, class, gender, academic_year, aadhar, village, taluka, district, pin,
+                religion, caste, nationality, mother_tongue, medium, residential_address, phone1, phone2,
+                photo, signature, payment_utr, exam_center, admission_phase
+            ) VALUES (
+                %(name)s, %(father_name)s, %(dob)s, %(class)s, %(gender)s, %(academic_year)s, %(aadhar)s, %(village)s, %(taluka)s, %(district)s, %(pin)s,
+                %(religion)s, %(caste)s, %(nationality)s, %(mother_tongue)s, %(medium)s, %(residential_address)s, %(phone1)s, %(phone2)s,
+                %(photo)s, %(signature)s, %(payment_utr)s, %(exam_center)s, %(admission_phase)s
+            ) RETURNING id
+        """, {
+            **student_data,
+            'photo': photo_db_path,
+            'signature': signature_db_path,
+            'payment_utr': student_data.get('payment_utr'),
+            'exam_center': student_data.get('exam_center'),
+            'admission_phase': student_data.get('admission_phase', 'Phase_1')
+        })
+        
+        student_id = cursor.fetchone()['id']
+        hall_ticket = f"HT-{student_id:06}"
+        cursor.execute("UPDATE students SET hall_ticket = %s WHERE id = %s", (hall_ticket, student_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
 
+        # Securely allow the student to view their own ticket
+        session['recent_student_id'] = student_id
         flash(f"Form submitted successfully! Hall Ticket: {hall_ticket}", "success")
         return redirect(url_for('view_hall_ticket', student_id=student_id))
 
     except Exception as e:
+        print(f"REGISTRATION ERROR: {e}") # This prints to Render logs
         flash(f"An error occurred: {e}", "danger")
         return redirect(url_for('register'))
 
 @app.route('/hallticket/<int:student_id>')
 def view_hall_ticket(student_id):
-    with get_db_connection() as conn:
-        student = conn.execute("SELECT * FROM students WHERE id = ?", (student_id,)).fetchone()
-        if not student:
-            flash("Student not found.", "danger")
-            return redirect(url_for('register'))
+    # Security: Allow Admin OR the student who just registered
+    if 'admin_logged_in' not in session and session.get('recent_student_id') != student_id:
+        flash('Unauthorized access. Please register to view your ticket.', 'danger')
+        return redirect(url_for('register'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=DictCursor)
+    cursor.execute("SELECT * FROM students WHERE id = %s", (student_id,))
+    student = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if not student:
+        flash("Student not found.", "danger")
+        return redirect(url_for('register'))
+        
     return render_template('hallticket.html', student=student)
 
-# ========== Admin Routes (Secured) ==========
+# ========== Admin Routes ==========
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         
-        # 🔐 CHANGE YOUR USERNAME AND PASSWORD HERE
         if username == 'admin' and password == 'iqbal2027':
             session['admin_logged_in'] = True
             flash('Logged in successfully.', 'success')
@@ -249,17 +293,24 @@ def admin_logout():
 @app.route('/admin')
 @login_required
 def admin_dashboard():
-    with get_db_connection() as conn:
-        students = conn.execute("SELECT * FROM students").fetchall()
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=DictCursor)
+    cursor.execute("SELECT * FROM students ORDER BY id DESC")
+    students = cursor.fetchall()
+    cursor.close()
+    conn.close()
     return render_template('admin.html', students=students)
 
 @app.route('/admin/verify/<int:student_id>', methods=['POST'])
 @login_required
 def verify_student(student_id):
     try:
-        with get_db_connection() as conn:
-            conn.execute("UPDATE students SET verified = TRUE WHERE id = ?", (student_id,))
-            conn.commit()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE students SET verified = TRUE WHERE id = %s", (student_id,))
+        conn.commit()
+        cursor.close()
+        conn.close()
         flash("Student data verified successfully!", "success")
     except Exception as e:
         flash(f"An error occurred while verifying: {e}", "danger")
@@ -269,16 +320,25 @@ def verify_student(student_id):
 @login_required
 def generate_hall_ticket(student_id):
     try:
-        with get_db_connection() as conn:
-            student = conn.execute("SELECT * FROM students WHERE id = ?", (student_id,)).fetchone()
-            if student and student['verified']:
-                hall_ticket = f"HT-{student_id:06}"
-                conn.execute("UPDATE students SET hall_ticket = ? WHERE id = ?", (hall_ticket, student_id))
-                conn.commit()
-                flash(f"Hall Ticket Generated: {hall_ticket}", "success")
-                return redirect(url_for('view_hall_ticket', student_id=student_id))
-            else:
-                flash("Student data is not verified or doesn't exist.", "danger")
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=DictCursor)
+        cursor.execute("SELECT * FROM students WHERE id = %s", (student_id,))
+        student = cursor.fetchone()
+        
+        if student and student['verified']:
+            hall_ticket = f"HT-{student_id:06}"
+            cursor.execute("UPDATE students SET hall_ticket = %s WHERE id = %s", (hall_ticket, student_id))
+            conn.commit()
+            flash(f"Hall Ticket Generated: {hall_ticket}", "success")
+        else:
+            flash("Student data is not verified or doesn't exist.", "danger")
+            
+        cursor.close()
+        conn.close()
+        
+        if student and student['verified']:
+            return redirect(url_for('view_hall_ticket', student_id=student_id))
+            
     except Exception as e:
         flash(f"An error occurred: {e}", "danger")
     return redirect(url_for('admin_dashboard'))
@@ -287,8 +347,12 @@ def generate_hall_ticket(student_id):
 @login_required
 def download_csv():
     try:
-        with get_db_connection() as conn:
-            students = conn.execute("SELECT id, hall_ticket, name, class, payment_utr, verified FROM students").fetchall()
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=DictCursor)
+        cursor.execute("SELECT id, hall_ticket, name, class, payment_utr, verified FROM students")
+        students = cursor.fetchall()
+        cursor.close()
+        conn.close()
 
         output = io.StringIO()
         writer = csv.DictWriter(output, fieldnames=["ID", "Hall Ticket Number", "Name", "Class", "UTR Number", "Status"])
@@ -319,7 +383,7 @@ def download_csv():
 def payment_info():
     return render_template('payment_info.html')
 
-# ========== PhonePe Routes (Kept for future) ==========
+# ========== PhonePe Routes ==========
 @app.route('/admin/save_phonepe_config', methods=['POST'])
 @login_required
 def save_phonepe_config():
